@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/imgs/Logo.svg";
 import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
+import { BASE_API } from "../constants";
+import globals from "../globals";
+import { postFetch } from "../utils/fetchUtils";
 
 interface Props {
   signIn: boolean;
@@ -14,9 +17,39 @@ export default function Auth({ signIn }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    if (password.length < 8 && !signIn) {
+      setError("Password has to be at least 8 characters.");
+      return;
+    }
+    const payload = { name, password, email };
+    try {
+      const res = await postFetch(
+        BASE_API + `auth/${signIn ? "login" : "register"}`,
+        payload
+      );
+      if (!res.ok) {
+        setError(await res.text());
+        return;
+      } else {
+        const json = JSON.parse(await res.text());
+        localStorage.setItem("refreshToken", json["refresh_token"]);
+        globals.accessToken = json["access_token"];
+      }
+    } catch (e: any) {
+      setError((e + "").replace("Error: ", ""));
+      return;
+    }
+  };
+
   return (
     <div className="bg-primary-50 w-full h-screen flex items-center justify-center">
-      <form className="bg-white shadow-md shadow-primary-200 flex flex-col p-6 justify-center space-y-9">
+      <form
+        className="bg-white shadow-md shadow-primary-200 flex flex-col p-6 justify-center space-y-9"
+        onSubmit={onSubmit}
+      >
         <div className="flex items-center space-x-4">
           <Logo className="h-28 w-20" />
           <h1 className="h2">Embattled</h1>
@@ -44,6 +77,7 @@ export default function Auth({ signIn }: Props) {
           setValue={setPassword}
           required
         />
+        {error && <span className="h6 text-primary-900">{error}</span>}
         <PrimaryButton>{signIn ? "Sign In" : "Sign Up"}</PrimaryButton>
         <p className="h5 !mt-[60px]">
           {signIn ? "Don't have an account? " : "Already have an account? "}
