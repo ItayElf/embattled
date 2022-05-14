@@ -1,4 +1,4 @@
-import { Mode } from "fs";
+import Mode from "./mode";
 import User from "./user";
 
 export default interface Room {
