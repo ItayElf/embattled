@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/imgs/Logo.svg";
 import PrimaryButton from "../components/primaryButton";
@@ -17,32 +17,35 @@ export default function Auth({ signIn }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
-    if (password.length < 8 && !signIn) {
-      setError("Password has to be at least 8 characters.");
-      return;
-    }
-    const payload = { name, password, email };
-    try {
-      const res = await postFetch(
-        BASE_API + `auth/${signIn ? "login" : "register"}`,
-        payload
-      );
-      if (!res.ok) {
-        setError(await res.text());
+  const onSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setError("");
+      if (password.length < 8 && !signIn) {
+        setError("Password has to be at least 8 characters.");
         return;
-      } else {
-        const json = JSON.parse(await res.text());
-        localStorage.setItem("refreshToken", json["refresh_token"]);
-        globals.accessToken = json["access_token"];
       }
-    } catch (e: any) {
-      setError((e + "").replace("Error: ", ""));
-      return;
-    }
-  };
+      const payload = { name, password, email };
+      try {
+        const res = await postFetch(
+          BASE_API + `auth/${signIn ? "login" : "register"}`,
+          payload
+        );
+        if (!res.ok) {
+          setError(await res.text());
+          return;
+        } else {
+          const json = JSON.parse(await res.text());
+          localStorage.setItem("refreshToken", json["refresh_token"]);
+          globals.accessToken = json["access_token"];
+        }
+      } catch (e: any) {
+        setError((e + "").replace("Error: ", ""));
+        return;
+      }
+    },
+    [email, name, password, signIn]
+  );
 
   return (
     <div className="bg-primary-50 w-full h-screen flex items-center justify-center">

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import Header from "../components/header";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
@@ -8,7 +8,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Army from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import Room from "../interfaces/room";
-import { getFetch } from "../utils/fetchUtils";
+import { getFetch, postFetch } from "../utils/fetchUtils";
 
 export default function Rooms() {
   const [rooms, setRooms] = useState<Room[] | undefined | null>(null);
@@ -16,7 +16,7 @@ export default function Rooms() {
   const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
   const [selectedArmyName, setSelectedArmyName] = useState("");
   const [roomName, setRoomName] = useState("");
-  const [mode, setMode] = useState(-1);
+  const [mode, setMode] = useState("");
   const user = useCurrentUser(true);
 
   const refresh = useCallback(async () => {
@@ -28,6 +28,22 @@ export default function Rooms() {
       setRooms(undefined);
     }
   }, []);
+
+  const host = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const army = armies.filter((a) => a.name === selectedArmyName)[0];
+      const res = await postFetch(BASE_API + "rooms/validate_army", {
+        army,
+        mode_id: mode,
+      });
+      if (res.status === 406) {
+        alert("Invalid army:\n" + JSON.parse(await res.text()).join("\n"));
+        return;
+      }
+    },
+    [armies, mode, selectedArmyName]
+  );
 
   useEffect(() => {
     const getData = async () => {
@@ -47,8 +63,9 @@ export default function Rooms() {
     return <Loading className="h-screen" />;
   }
 
-  const selectedMode =
-    mode === -1 ? null : modes.filter((m) => m.id === mode)[0];
+  const selectedMode = !mode
+    ? null
+    : modes.filter((m) => m.id === parseInt(mode))[0];
   const filteredArmies = armies.filter(
     (a) => selectedMode === null || a.mode.points <= selectedMode.points
   );
@@ -96,20 +113,22 @@ export default function Rooms() {
           <PrimaryButton className="w-full py-3" onClick={() => refresh()}>
             Refresh
           </PrimaryButton>
-          <form className="mt-16 space-y-4">
+          <form className="mt-16 space-y-4" onSubmit={host}>
             <TextField
               type="text"
               value={roomName}
               setValue={setRoomName}
               label="Room Name"
               className="py-3"
+              required
             />
             <select
               className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
-              value={mode + ""}
-              onChange={(e) => setMode(parseInt(e.target.value))}
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              required
             >
-              <option value="-1" disabled>
+              <option value="" disabled>
                 Mode
               </option>
               {modes.map((m, i) => (
@@ -122,6 +141,8 @@ export default function Rooms() {
               className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
               value={selectedArmyName}
               onChange={(e) => setSelectedArmyName(e.target.value)}
+              disabled={!mode}
+              required
             >
               <option value="" disabled>
                 Select Army
