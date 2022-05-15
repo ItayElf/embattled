@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import Header from "../components/header";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
@@ -8,7 +9,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Army from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import Room from "../interfaces/room";
-import { getFetch, postFetch } from "../utils/fetchUtils";
+import { getFetch, postFetch, postFetchSafe } from "../utils/fetchUtils";
 
 export default function Rooms() {
   const [rooms, setRooms] = useState<Room[] | undefined | null>(null);
@@ -17,6 +18,8 @@ export default function Rooms() {
   const [selectedArmyName, setSelectedArmyName] = useState("");
   const [roomName, setRoomName] = useState("");
   const [mode, setMode] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const user = useCurrentUser(true);
 
   const refresh = useCallback(async () => {
@@ -41,6 +44,17 @@ export default function Rooms() {
         alert("Invalid army:\n" + JSON.parse(await res.text()).join("\n"));
         return;
       }
+      const res2 = await postFetchSafe(BASE_API + "rooms/host", {
+        name: roomName,
+        mode_id: mode,
+      });
+      if (!res2.ok) {
+        setError(await res2.text());
+        return;
+      }
+      navigate(`/game/${await res2.text()}`, {
+        state: { army: JSON.stringify(army) },
+      });
     },
     [armies, mode, selectedArmyName]
   );
@@ -153,6 +167,7 @@ export default function Rooms() {
                 </option>
               ))}
             </select>
+            {error && <span className="h6 text-primary-900">{error}</span>}
             <PrimaryButton className="w-full py-3">Host Room</PrimaryButton>
           </form>
         </div>
