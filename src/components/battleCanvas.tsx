@@ -54,6 +54,16 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
         tileSize
       );
     }
+    for (let i = 0; i < game.mode.board_size; i++) {
+      ctx.font = "12px serif";
+      ctx.fillStyle = "white";
+      ctx.fillText(String.fromCharCode(65 + i), i * tileSize + 5, 15);
+    }
+    for (let i = 1; i < game.mode.board_size; i++) {
+      ctx.font = "12px serif";
+      ctx.fillStyle = "white";
+      ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
+    }
   }, [game.map, game.mode.board_size, getImage, tileSize, dirt, water]);
 
   return (
