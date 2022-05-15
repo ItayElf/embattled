@@ -5,6 +5,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import BattleCanvas from "../components/battleCanvas";
 import Header from "../components/header";
 import Loading from "../components/loading";
 import { BASE_WS } from "../constants";
@@ -69,6 +70,9 @@ export default function GamePage() {
         {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
         {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
       </h1>
+      <div className="flex px-6 mt-6">
+        <BattleCanvas game={game} />
+      </div>
     </>
   );
 }

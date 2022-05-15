@@ -5,4 +5,5 @@ export default interface Game {
   host: Player;
   joiner: Player;
   mode: Mode;
+  map: string;
 }
