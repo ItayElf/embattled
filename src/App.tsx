@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Auth from "./pages/auth";
-import Game from "./pages/game";
+import GamePage from "./pages/game";
 import Rooms from "./pages/rooms";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
       <Route path="/signIn" element={<Auth signIn={true} key={"signIn"} />} />
       <Route path="/signUp" element={<Auth signIn={false} key={"signUp"} />} />
       <Route path="/rooms" element={<Rooms />} />
-      <Route path="/game/:hash" element={<Game />} />
+      <Route path="/game/:hash" element={<GamePage />} />
     </Routes>
   );
 }
