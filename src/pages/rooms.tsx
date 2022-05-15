@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Header from "../components/header";
+import JoinModal from "../components/joinModal";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
@@ -19,6 +20,7 @@ export default function Rooms() {
   const [roomName, setRoomName] = useState("");
   const [mode, setMode] = useState("");
   const [error, setError] = useState("");
+  const [joinRoom, setJoinRoom] = useState<Room | null>(null);
   const navigate = useNavigate();
   const user = useCurrentUser(true);
 
@@ -56,7 +58,7 @@ export default function Rooms() {
         state: { army: JSON.stringify(army) },
       });
     },
-    [armies, mode, selectedArmyName]
+    [armies, mode, selectedArmyName, navigate, roomName]
   );
 
   useEffect(() => {
@@ -113,7 +115,12 @@ export default function Rooms() {
                   <td className="py-2">{r.host.name}</td>
                   <td className="py-2">
                     {r.host.name !== user.name && (
-                      <PrimaryButton className="h6 pt-1 w-full -mx-5">
+                      <PrimaryButton
+                        onClick={() => {
+                          setJoinRoom(r);
+                        }}
+                        className="h6 pt-1 w-full -mx-5"
+                      >
                         Join
                       </PrimaryButton>
                     )}
@@ -172,6 +179,11 @@ export default function Rooms() {
           </form>
         </div>
       </div>
+      <JoinModal
+        room={joinRoom}
+        onClose={() => setJoinRoom(null)}
+        armies={armies}
+      />
     </>
   );
 }
