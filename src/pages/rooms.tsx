@@ -5,6 +5,7 @@ import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import Army from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import Room from "../interfaces/room";
 import { getFetch } from "../utils/fetchUtils";
@@ -12,6 +13,8 @@ import { getFetch } from "../utils/fetchUtils";
 export default function Rooms() {
   const [rooms, setRooms] = useState<Room[] | undefined | null>(null);
   const [modes, setModes] = useState<Mode[] | undefined | null>(null);
+  const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
+  const [selectedArmyName, setSelectedArmyName] = useState("");
   const [roomName, setRoomName] = useState("");
   const [mode, setMode] = useState(-1);
   const user = useCurrentUser(true);
@@ -43,6 +46,12 @@ export default function Rooms() {
   if (!user || rooms == null || !modes) {
     return <Loading className="h-screen" />;
   }
+
+  const selectedMode =
+    mode === -1 ? null : modes.filter((m) => m.id === mode)[0];
+  const filteredArmies = armies.filter(
+    (a) => selectedMode === null || a.mode.points <= selectedMode.points
+  );
 
   return (
     <>
@@ -104,12 +113,25 @@ export default function Rooms() {
                 Mode
               </option>
               {modes.map((m, i) => (
-                <option value={m.id + ""}>
+                <option value={m.id + ""} key={i}>
                   {m.name} ({m.points}P)
                 </option>
               ))}
             </select>
-            <select className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"></select>
+            <select
+              className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              value={selectedArmyName}
+              onChange={(e) => setSelectedArmyName(e.target.value)}
+            >
+              <option value="" disabled>
+                Select Army
+              </option>
+              {filteredArmies.map((a, i) => (
+                <option value={a.name} key={i}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
             <PrimaryButton className="w-full py-3">Host Room</PrimaryButton>
           </form>
         </div>
