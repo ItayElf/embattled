@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Navigate,
   useLocation,
@@ -22,11 +22,21 @@ export default function GamePage() {
   const { hash } = useParams();
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [game, setGame] = useState<Game | null>(null);
+  const [moveSquares, setMoveSquares] = useState<number[][] | null>(null);
   const user = useCurrentUser(true);
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
   const army = state.army;
+
+  const onRequestMove = useCallback(
+    async (id: number) => {
+      if (!ws) return;
+      console.log("SENT");
+      ws.send(JSON.stringify({ type: "move_request", id }));
+    },
+    [ws]
+  );
 
   useEffect(() => {
     if (user && !ws) {
@@ -44,6 +54,8 @@ export default function GamePage() {
           if (res.content === "army") ws.send(army);
         } else if (res.type === "game_data") {
           setGame(JSON.parse(res.content));
+        } else if (res.type === "move") {
+          setMoveSquares(JSON.parse(res.content));
         }
       };
     }
@@ -70,10 +82,16 @@ export default function GamePage() {
     <>
       <Header user={user} />
       <div className="flex px-6 mt-24 max-h-screen">
-        <BattleCanvas game={game} />
+        <BattleCanvas game={game} moveSquares={moveSquares} />
         <div className="w-full">
           <div className="h-full">
-            <ActionPanel game={game} isHost={isHost} className="w-full h-1/2" />
+            <ActionPanel
+              game={game}
+              isHost={isHost}
+              className="w-full h-1/2"
+              onRequestMove={onRequestMove}
+              resetMove={() => setMoveSquares(null)}
+            />
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ const CANVAS_SIZE = 816;
 
 interface Props {
   game: Game;
+  moveSquares: number[][] | null;
 }
 
 const getAltColor = (faction: string) => {
@@ -35,7 +36,7 @@ const getAltColor = (faction: string) => {
   }
 };
 
-const BattleCanvas: React.FC<Props> = ({ game }) => {
+const BattleCanvas: React.FC<Props> = ({ game, moveSquares }) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
   const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
   const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
@@ -103,6 +104,17 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
     [tileSize]
   );
 
+  const highlightMoves = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      if (!moveSquares) return;
+      moveSquares.forEach((pos) => {
+        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+        ctx.fillRect(pos[0] * tileSize, pos[1] * tileSize, tileSize, tileSize);
+      });
+    },
+    [moveSquares, tileSize]
+  );
+
   useEffect(() => {
     if (!dirt || !water || !hostUnit || !joinerUnit) return;
     const canv = canvasRef.current;
@@ -137,6 +149,7 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
 
     drawUnits(ctx, hostUnit, game.host);
     drawUnits(ctx, joinerUnit, game.joiner);
+    highlightMoves(ctx);
 
     for (let i = 0; i <= game.mode.board_size; i++) {
       ctx.fillStyle = "black";
@@ -157,6 +170,7 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
     game.map,
     game.mode.board_size,
     getImage,
+    highlightMoves,
     hostUnit,
     joinerUnit,
     tileSize,

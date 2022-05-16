@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Game from "../interfaces/game";
+import MovePanel from "./panels/movePanel";
 import UnitsPanel from "./panels/unitsPanel";
 import PrimaryButton from "./primaryButton";
 
@@ -7,9 +8,17 @@ interface Props {
   game: Game;
   isHost: boolean;
   className?: string;
+  onRequestMove: (id: number) => void;
+  resetMove: () => void;
 }
 
-const ActionPanel: React.FC<Props> = ({ game, isHost, className }) => {
+const ActionPanel: React.FC<Props> = ({
+  game,
+  isHost,
+  className,
+  onRequestMove,
+  resetMove,
+}) => {
   const [screen, setScreen] = useState("");
   const yourTurn =
     (isHost && game.is_host_turn) || (!isHost && !game.is_host_turn);
@@ -25,7 +34,7 @@ const ActionPanel: React.FC<Props> = ({ game, isHost, className }) => {
       </p>
       <div className="h-px bg-primary-100" />
       <div className="pt-2">
-        {screen === "" && <Actions setScreen={setScreen} />}
+        {screen === "" && <Actions setScreen={setScreen} yourTurn={yourTurn} />}
         {screen === "units" && (
           <UnitsPanel
             units={isHost ? game.host.army : game.joiner.army}
@@ -40,6 +49,16 @@ const ActionPanel: React.FC<Props> = ({ game, isHost, className }) => {
             isOwner={false}
           />
         )}
+        {screen === "move" && (
+          <MovePanel
+            units={game.host.army}
+            onBack={() => {
+              setScreen("");
+              resetMove();
+            }}
+            onRequestMove={onRequestMove}
+          />
+        )}
       </div>
     </div>
   );
@@ -49,9 +68,10 @@ export default ActionPanel;
 
 interface ActionProps {
   setScreen: (screen: string) => void;
+  yourTurn: boolean;
 }
 
-const Actions: React.FC<ActionProps> = ({ setScreen }) => {
+const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn }) => {
   return (
     <div className="grid grid-cols-3 gap-4">
       <PrimaryButton className="h6" onClick={() => setScreen("units")}>
@@ -60,6 +80,11 @@ const Actions: React.FC<ActionProps> = ({ setScreen }) => {
       <PrimaryButton className="h6" onClick={() => setScreen("oppunits")}>
         Opp. Units
       </PrimaryButton>
+      {yourTurn && (
+        <PrimaryButton className="h6" onClick={() => setScreen("move")}>
+          Move Unit
+        </PrimaryButton>
+      )}
     </div>
   );
 };
