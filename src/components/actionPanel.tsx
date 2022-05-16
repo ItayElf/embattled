@@ -34,7 +34,13 @@ const ActionPanel: React.FC<Props> = ({
       </p>
       <div className="h-px bg-primary-100" />
       <div className="pt-2">
-        {screen === "" && <Actions setScreen={setScreen} yourTurn={yourTurn} />}
+        {screen === "" && (
+          <Actions
+            setScreen={setScreen}
+            yourTurn={yourTurn}
+            moved={game.moved_unit !== null}
+          />
+        )}
         {screen === "units" && (
           <UnitsPanel
             units={isHost ? game.host.army : game.joiner.army}
@@ -69,9 +75,10 @@ export default ActionPanel;
 interface ActionProps {
   setScreen: (screen: string) => void;
   yourTurn: boolean;
+  moved: boolean;
 }
 
-const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn }) => {
+const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn, moved }) => {
   return (
     <div className="grid grid-cols-3 gap-4">
       <PrimaryButton className="h6" onClick={() => setScreen("units")}>
@@ -81,7 +88,11 @@ const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn }) => {
         Opp. Units
       </PrimaryButton>
       {yourTurn && (
-        <PrimaryButton className="h6" onClick={() => setScreen("move")}>
+        <PrimaryButton
+          disabled={moved}
+          className="h6"
+          onClick={() => setScreen("move")}
+        >
           Move Unit
         </PrimaryButton>
       )}

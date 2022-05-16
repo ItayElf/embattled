@@ -7,4 +7,5 @@ export default interface Game {
   mode: Mode;
   map: string;
   is_host_turn: boolean;
+  moved_unit: number | null;
 }
