@@ -66,12 +66,14 @@ export default function GamePage() {
   return (
     <>
       <Header user={user} />
-      <h1 className="h4 mt-24 text-center">
-        {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
-        {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
-      </h1>
-      <div className="flex px-6 mt-6">
+      <div className="flex px-6 mt-24">
         <BattleCanvas game={game} />
+        <div className="w-full">
+          <h1 className="h4 text-center">
+            {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
+            {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
+          </h1>
+        </div>
       </div>
     </>
   );

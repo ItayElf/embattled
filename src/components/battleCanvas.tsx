@@ -1,15 +1,45 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Game from "../interfaces/game";
+import Player from "../interfaces/player";
 
-const CANVAS_SIZE = 720;
+const CANVAS_SIZE = 816;
 
 interface Props {
   game: Game;
 }
 
+const getAltColor = (faction: string) => {
+  switch (faction) {
+    case "England":
+      return "#FFFAEF";
+    case "England Alt":
+      return "#F03134";
+    case "India":
+      return "#128807";
+    case "India Alt":
+      return "#128807";
+    case "Mongolia":
+      return "#C4272F";
+    case "Mongolia Alt":
+      return "#F9CF02";
+    case "Norway":
+      return "#BA0C2F";
+    case "Norway: Alt":
+      return "#015197";
+    case "Mercenaries":
+      return "#FFFAEF";
+    case "Mercenaries Alt":
+      return "#121212";
+    default:
+      return "white";
+  }
+};
+
 const BattleCanvas: React.FC<Props> = ({ game }) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
   const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
+  const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
+  const [joinerUnit, setJoinerUnit] = useState<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tileSize = CANVAS_SIZE / game.mode.board_size;
 
@@ -23,19 +53,58 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
 
   useEffect(() => {
     const dirtImage = new Image();
-    dirtImage.src = require("../assets/imgs/dirt.png");
+    dirtImage.src = require("../assets/imgs/tiles/dirt.png");
     dirtImage.onload = () => {
       setDirt(dirtImage);
     };
     const waterImage = new Image();
-    waterImage.src = require("../assets/imgs/water.png");
+    waterImage.src = require("../assets/imgs/tiles/water.png");
     waterImage.onload = () => {
       setWater(waterImage);
     };
-  }, []);
+    const hostImage = new Image();
+    hostImage.src = require(`../assets/imgs/units/${game.host.faction}.svg`);
+    hostImage.onload = () => {
+      setHostUnit(hostImage);
+    };
+    const joinerImage = new Image();
+    joinerImage.src = require(`../assets/imgs/units/${game.joiner.faction}.svg`);
+    joinerImage.onload = () => {
+      setJoinerUnit(joinerImage);
+    };
+  }, [game.host.faction, game.joiner.faction]);
+
+  const drawUnits = useCallback(
+    (ctx: CanvasRenderingContext2D, unit: HTMLImageElement, player: Player) => {
+      Object.keys(player.army).forEach((i) => {
+        const u = player.army[parseInt(i)];
+        const height = tileSize - 2;
+        const width = (unit.width * height) / unit.height;
+
+        ctx.drawImage(
+          unit,
+          u.position[0] * tileSize + (tileSize / 2 - width / 2),
+          u.position[1] * tileSize + (tileSize / 2 - height / 2),
+          width,
+          height
+        );
+
+        ctx.fillStyle = getAltColor(player.faction);
+        ctx.font = "20px serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(
+          i,
+          u.position[0] * tileSize + tileSize / 2,
+          u.position[1] * tileSize + tileSize / 2
+        );
+      });
+    },
+    [tileSize]
+  );
 
   useEffect(() => {
-    if (!dirt || !water) return;
+    if (!dirt || !water || !hostUnit || !joinerUnit) return;
     const canv = canvasRef.current;
     if (!canv) return;
     const ctx = canv.getContext("2d");
@@ -55,6 +124,7 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
       );
     }
     for (let i = 0; i < game.mode.board_size; i++) {
+      ctx.textAlign = "start";
       ctx.font = "12px serif";
       ctx.fillStyle = "white";
       ctx.fillText(String.fromCharCode(65 + i), i * tileSize + 5, 15);
@@ -64,14 +134,41 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
       ctx.fillStyle = "white";
       ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
     }
-  }, [game.map, game.mode.board_size, getImage, tileSize, dirt, water]);
+
+    drawUnits(ctx, hostUnit, game.host);
+    drawUnits(ctx, joinerUnit, game.joiner);
+
+    for (let i = 0; i < game.mode.board_size; i++) {
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.moveTo(0, i * tileSize);
+      ctx.lineTo(CANVAS_SIZE, i * tileSize);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(i * tileSize, 0);
+      ctx.lineTo(i * tileSize, CANVAS_SIZE);
+      ctx.stroke();
+    }
+  }, [
+    dirt,
+    drawUnits,
+    game.host,
+    game.joiner,
+    game.map,
+    game.mode.board_size,
+    getImage,
+    hostUnit,
+    joinerUnit,
+    tileSize,
+    water,
+  ]);
 
   return (
     <canvas
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className="w-[720px] h-[720px]"
+      className="w-[816px] h-[816px]"
     ></canvas>
   );
 };
