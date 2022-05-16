@@ -138,7 +138,7 @@ const BattleCanvas: React.FC<Props> = ({ game }) => {
     drawUnits(ctx, hostUnit, game.host);
     drawUnits(ctx, joinerUnit, game.joiner);
 
-    for (let i = 0; i < game.mode.board_size; i++) {
+    for (let i = 0; i <= game.mode.board_size; i++) {
       ctx.fillStyle = "black";
       ctx.beginPath();
       ctx.moveTo(0, i * tileSize);

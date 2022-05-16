@@ -12,12 +12,15 @@ export default interface Unit {
   speed: number;
   defense: number;
   melee_attack: number;
+  melee_damage: number;
   charge_bonus: number;
   ammunition_max: number | null;
   ammunition: number | null;
   range: number | null;
+  ranged_attack: number | null;
   ranged_damage: number | null;
   attributes: Attribute[];
   keywords: string[];
   position: number[];
+  activated: boolean;
 }

@@ -5,6 +5,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import ActionPanel from "../components/actionPanel";
 import BattleCanvas from "../components/battleCanvas";
 import Header from "../components/header";
 import Loading from "../components/loading";
@@ -19,7 +20,7 @@ interface LocationState {
 
 export default function GamePage() {
   const { hash } = useParams();
-  const [init, setInit] = useState(false);
+  const [ws, setWs] = useState<WebSocket | null>(null);
   const [game, setGame] = useState<Game | null>(null);
   const user = useCurrentUser(true);
   const navigate = useNavigate();
@@ -28,9 +29,9 @@ export default function GamePage() {
   const army = state.army;
 
   useEffect(() => {
-    if (user && !init) {
-      setInit(true);
+    if (user && !ws) {
       const ws = new WebSocket(BASE_WS + hash);
+      setWs(ws);
       ws.onopen = () => {
         ws.send(globals.accessToken);
       };
@@ -46,7 +47,7 @@ export default function GamePage() {
         }
       };
     }
-  }, [hash, user, navigate, army, init]);
+  }, [hash, user, navigate, army, ws]);
 
   if (!state || !state.army) return <Navigate to={"/rooms"} />;
   if (!user) return <Loading className="h-screen" />;
@@ -63,16 +64,17 @@ export default function GamePage() {
     );
   }
 
+  const isHost = game.host.name === user.name;
+
   return (
     <>
       <Header user={user} />
-      <div className="flex px-6 mt-24">
+      <div className="flex px-6 mt-24 max-h-screen">
         <BattleCanvas game={game} />
         <div className="w-full">
-          <h1 className="h4 text-center">
-            {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
-            {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
-          </h1>
+          <div className="h-full">
+            <ActionPanel game={game} isHost={isHost} className="w-full h-1/2" />
+          </div>
         </div>
       </div>
     </>

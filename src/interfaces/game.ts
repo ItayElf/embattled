@@ -6,4 +6,5 @@ export default interface Game {
   joiner: Player;
   mode: Mode;
   map: string;
+  is_host_turn: boolean;
 }
