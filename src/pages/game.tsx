@@ -22,6 +22,7 @@ export default function GamePage() {
   const { hash } = useParams();
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [game, setGame] = useState<Game | null>(null);
+  const [index, setIndex] = useState(-1);
   const [moveSquares, setMoveSquares] = useState<number[][] | null>(null);
   const user = useCurrentUser(true);
   const navigate = useNavigate();
@@ -32,10 +33,18 @@ export default function GamePage() {
   const onRequestMove = useCallback(
     async (id: number) => {
       if (!ws) return;
-      console.log("SENT");
       ws.send(JSON.stringify({ type: "move_request", id }));
+      setIndex(id);
     },
     [ws]
+  );
+
+  const onMove = useCallback(
+    async (pos: number[]) => {
+      if (!ws) return;
+      ws.send(JSON.stringify({ type: "move_action", pos, id: index }));
+    },
+    [index, ws]
   );
 
   useEffect(() => {
@@ -50,10 +59,13 @@ export default function GamePage() {
         console.log(`WSGOT: ${JSON.stringify(res)}`);
         if (res.type === "error") {
           if (res.content === "No room") navigate("/rooms");
+          else alert(res.content);
         } else if (res.type === "request") {
           if (res.content === "army") ws.send(army);
         } else if (res.type === "game_data") {
           setGame(JSON.parse(res.content));
+          setIndex(-1);
+          setMoveSquares(null);
         } else if (res.type === "move") {
           setMoveSquares(JSON.parse(res.content));
         }
@@ -82,7 +94,7 @@ export default function GamePage() {
     <>
       <Header user={user} />
       <div className="flex px-6 mt-24 max-h-screen">
-        <BattleCanvas game={game} moveSquares={moveSquares} />
+        <BattleCanvas game={game} moveSquares={moveSquares} onMove={onMove} />
         <div className="w-full">
           <div className="h-full">
             <ActionPanel

@@ -7,6 +7,7 @@ const CANVAS_SIZE = 816;
 interface Props {
   game: Game;
   moveSquares: number[][] | null;
+  onMove: (pos: number[]) => void;
 }
 
 const getAltColor = (faction: string) => {
@@ -36,7 +37,7 @@ const getAltColor = (faction: string) => {
   }
 };
 
-const BattleCanvas: React.FC<Props> = ({ game, moveSquares }) => {
+const BattleCanvas: React.FC<Props> = ({ game, moveSquares, onMove }) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
   const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
   const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
@@ -74,6 +75,19 @@ const BattleCanvas: React.FC<Props> = ({ game, moveSquares }) => {
       setJoinerUnit(joinerImage);
     };
   }, [game.host.faction, game.joiner.faction]);
+
+  const handleClick = useCallback(
+    (canvas: HTMLCanvasElement, e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) / tileSize);
+      const y = Math.floor((e.clientY - rect.top) / tileSize);
+      console.log(x, y);
+      if (moveSquares) {
+        onMove([x, y]);
+      }
+    },
+    [tileSize, moveSquares, onMove]
+  );
 
   const drawUnits = useCallback(
     (ctx: CanvasRenderingContext2D, unit: HTMLImageElement, player: Player) => {
@@ -121,6 +135,9 @@ const BattleCanvas: React.FC<Props> = ({ game, moveSquares }) => {
     if (!canv) return;
     const ctx = canv.getContext("2d");
     if (!ctx) return;
+
+    // if (typeof canv.onclick == "undefined")
+    canv.onclick = (e) => handleClick(canv, e);
 
     for (let i = 0; i < game.map.length; i++) {
       const x = i % game.mode.board_size;
@@ -170,6 +187,7 @@ const BattleCanvas: React.FC<Props> = ({ game, moveSquares }) => {
     game.map,
     game.mode.board_size,
     getImage,
+    handleClick,
     highlightMoves,
     hostUnit,
     joinerUnit,

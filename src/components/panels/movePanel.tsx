@@ -25,6 +25,7 @@ const MovePanel: React.FC<Props> = ({ units, onBack, onRequestMove }) => {
                 className="s1"
                 onClick={() => {
                   onRequestMove(parseInt(i));
+                  onBack();
                 }}
               >
                 {units[parseInt(i)].name} (#{i})
