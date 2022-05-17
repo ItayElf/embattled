@@ -83,8 +83,8 @@ const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
               </div>
               <div className="s1 space-y-2">
                 <p>Range: {selectedUnit.range ?? "N/A"}</p>
-                <p>R. Attack: {selectedUnit.ranged_attack ?? "N/A"}</p>
-                <p>R. Damage: {selectedUnit.ranged_damage ?? "N/A"}</p>
+                <p>R.Attack: {selectedUnit.ranged_attack ?? "N/A"}</p>
+                <p>R.Damage: {selectedUnit.ranged_damage ?? "N/A"}</p>
               </div>
             </div>
             <div className="w-1/2 space-y-2 s1 mt-2">

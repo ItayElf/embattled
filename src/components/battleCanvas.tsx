@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
 import Player from "../interfaces/player";
 
@@ -7,7 +8,9 @@ const CANVAS_SIZE = 816;
 interface Props {
   game: Game;
   moveSquares: number[][] | null;
+  attackSquares: AttackDestinations | null;
   onMove: (pos: number[]) => void;
+  isHost: boolean;
 }
 
 const getAltColor = (faction: string) => {
@@ -37,7 +40,13 @@ const getAltColor = (faction: string) => {
   }
 };
 
-const BattleCanvas: React.FC<Props> = ({ game, moveSquares, onMove }) => {
+const BattleCanvas: React.FC<Props> = ({
+  game,
+  moveSquares,
+  attackSquares,
+  onMove,
+  isHost,
+}) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
   const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
   const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
@@ -78,15 +87,15 @@ const BattleCanvas: React.FC<Props> = ({ game, moveSquares, onMove }) => {
 
   const handleClick = useCallback(
     (canvas: HTMLCanvasElement, e: MouseEvent) => {
+      if (game.is_host_turn !== isHost) return;
       const rect = canvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) / tileSize);
       const y = Math.floor((e.clientY - rect.top) / tileSize);
-      console.log(x, y);
       if (moveSquares) {
         onMove([x, y]);
       }
     },
-    [tileSize, moveSquares, onMove]
+    [tileSize, moveSquares, onMove, game.is_host_turn, isHost]
   );
 
   const drawUnits = useCallback(
@@ -118,15 +127,30 @@ const BattleCanvas: React.FC<Props> = ({ game, moveSquares, onMove }) => {
     [tileSize]
   );
 
+  const drawSquare = useCallback(
+    (ctx: CanvasRenderingContext2D, x: number, y: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    },
+    [tileSize]
+  );
+
   const highlightMoves = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      if (!moveSquares) return;
-      moveSquares.forEach((pos) => {
-        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-        ctx.fillRect(pos[0] * tileSize, pos[1] * tileSize, tileSize, tileSize);
-      });
+      if (moveSquares) {
+        moveSquares.forEach((pos) =>
+          drawSquare(ctx, pos[0], pos[1], "rgba(255, 0, 0, 0.5)")
+        );
+      } else if (attackSquares) {
+        attackSquares.melee.forEach((pos) =>
+          drawSquare(ctx, pos[0], pos[1], "rgba(255, 0, 0, 0.5)")
+        );
+        attackSquares.range.forEach((pos) =>
+          drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 0, 0.5)")
+        );
+      }
     },
-    [moveSquares, tileSize]
+    [moveSquares, attackSquares, drawSquare]
   );
 
   useEffect(() => {

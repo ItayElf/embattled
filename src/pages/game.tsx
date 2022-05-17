@@ -12,6 +12,7 @@ import Loading from "../components/loading";
 import { BASE_WS } from "../constants";
 import globals from "../globals";
 import useCurrentUser from "../hooks/useCurrentUser";
+import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
 
 interface LocationState {
@@ -24,6 +25,9 @@ export default function GamePage() {
   const [game, setGame] = useState<Game | null>(null);
   const [index, setIndex] = useState(-1);
   const [moveSquares, setMoveSquares] = useState<number[][] | null>(null);
+  const [attackSquares, setAttackSquares] = useState<AttackDestinations | null>(
+    null
+  );
   const user = useCurrentUser(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,6 +38,14 @@ export default function GamePage() {
     async (id: number) => {
       if (!ws) return;
       ws.send(JSON.stringify({ type: "move_request", id }));
+      setIndex(id);
+    },
+    [ws]
+  );
+  const onRequestAttack = useCallback(
+    async (id: number) => {
+      if (!ws) return;
+      ws.send(JSON.stringify({ type: "attack_request", id }));
       setIndex(id);
     },
     [ws]
@@ -68,6 +80,8 @@ export default function GamePage() {
           setMoveSquares(null);
         } else if (res.type === "move") {
           setMoveSquares(JSON.parse(res.content));
+        } else if (res.type === "attack") {
+          setAttackSquares(JSON.parse(res.content));
         }
       };
     }
@@ -94,7 +108,13 @@ export default function GamePage() {
     <>
       <Header user={user} />
       <div className="flex px-6 mt-24 max-h-screen">
-        <BattleCanvas game={game} moveSquares={moveSquares} onMove={onMove} />
+        <BattleCanvas
+          game={game}
+          moveSquares={moveSquares}
+          attackSquares={attackSquares}
+          onMove={onMove}
+          isHost={isHost}
+        />
         <div className="w-full">
           <div className="h-full">
             <ActionPanel
@@ -102,6 +122,7 @@ export default function GamePage() {
               isHost={isHost}
               className="w-full h-1/2"
               onRequestMove={onRequestMove}
+              onRequestAttack={onRequestAttack}
               resetMove={() => setMoveSquares(null)}
             />
           </div>

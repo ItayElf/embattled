@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Game from "../interfaces/game";
+import AttackPanel from "./panels/attackPanel";
 import MovePanel from "./panels/movePanel";
 import UnitsPanel from "./panels/unitsPanel";
 import PrimaryButton from "./primaryButton";
@@ -9,6 +10,7 @@ interface Props {
   isHost: boolean;
   className?: string;
   onRequestMove: (id: number) => void;
+  onRequestAttack: (id: number) => void;
   resetMove: () => void;
 }
 
@@ -17,6 +19,7 @@ const ActionPanel: React.FC<Props> = ({
   isHost,
   className,
   onRequestMove,
+  onRequestAttack,
   resetMove,
 }) => {
   const [screen, setScreen] = useState("");
@@ -57,12 +60,22 @@ const ActionPanel: React.FC<Props> = ({
         )}
         {screen === "move" && (
           <MovePanel
-            units={game.host.army}
+            units={isHost ? game.host.army : game.joiner.army}
             onBack={() => {
               setScreen("");
               resetMove();
             }}
             onRequestMove={onRequestMove}
+          />
+        )}
+        {screen === "attack" && (
+          <AttackPanel
+            movedUnit={game.moved_unit}
+            units={isHost ? game.host.army : game.joiner.army}
+            onBack={() => {
+              setScreen("");
+            }}
+            onRequestAttack={onRequestAttack}
           />
         )}
       </div>
@@ -87,14 +100,21 @@ const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn, moved }) => {
       <PrimaryButton className="h6" onClick={() => setScreen("oppunits")}>
         Opp. Units
       </PrimaryButton>
-      {yourTurn && (
-        <PrimaryButton
-          disabled={moved}
-          className="h6"
-          onClick={() => setScreen("move")}
-        >
-          Move Unit
-        </PrimaryButton>
+      {yourTurn ? (
+        <>
+          <PrimaryButton
+            disabled={moved}
+            className="h6"
+            onClick={() => setScreen("move")}
+          >
+            Move Unit
+          </PrimaryButton>
+          <PrimaryButton className="h6" onClick={() => setScreen("attack")}>
+            Attack
+          </PrimaryButton>
+        </>
+      ) : (
+        <></>
       )}
     </div>
   );
