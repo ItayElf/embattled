@@ -56,7 +56,7 @@ const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
                 className="w-full h-6"
               />
             </div>
-            {selectedUnit.ammunition && selectedUnit.ammunition_max && (
+            {selectedUnit.ammunition !== null && selectedUnit.ammunition_max && (
               <div className="w-full">
                 <p className="h6 text-center">
                   Ammo ({selectedUnit.ammunition}/{selectedUnit.ammunition_max})

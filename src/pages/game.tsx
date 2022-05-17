@@ -9,11 +9,13 @@ import ActionPanel from "../components/actionPanel";
 import BattleCanvas from "../components/battleCanvas";
 import Header from "../components/header";
 import Loading from "../components/loading";
+import LogArea from "../components/logArea";
 import { BASE_WS } from "../constants";
 import globals from "../globals";
 import useCurrentUser from "../hooks/useCurrentUser";
 import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
+import LogMessage from "../interfaces/logMessage";
 
 interface LocationState {
   army: string;
@@ -28,6 +30,7 @@ export default function GamePage() {
   const [attackSquares, setAttackSquares] = useState<AttackDestinations | null>(
     null
   );
+  const [msgs, setMsgs] = useState<LogMessage[]>([]);
   const user = useCurrentUser(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -90,6 +93,8 @@ export default function GamePage() {
           setMoveSquares(JSON.parse(res.content));
         } else if (res.type === "attack") {
           setAttackSquares(JSON.parse(res.content));
+        } else if (res.type === "msg") {
+          setMsgs((m) => [...m, JSON.parse(res.content)]);
         }
       };
     }
@@ -134,6 +139,7 @@ export default function GamePage() {
               onRequestAttack={onRequestAttack}
               resetMove={() => setMoveSquares(null)}
             />
+            <LogArea messages={msgs} className="w-full h-1/2" />
           </div>
         </div>
       </div>
