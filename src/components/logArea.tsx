@@ -47,7 +47,7 @@ const LogTile: React.FC<LogProps> = ({ message }) => {
     return <div className="b1">{message.content}</div>;
   } else if (message.type === "turn") {
     return (
-      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mt-4 py-4">
+      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mt-4 mb-2 py-4">
         Turn {message.turn}
       </div>
     );

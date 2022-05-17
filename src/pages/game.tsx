@@ -130,7 +130,7 @@ export default function GamePage() {
           isHost={isHost}
         />
         <div className="w-full">
-          <div className="h-full">
+          <div className="h-full max-h-[816px]">
             <ActionPanel
               game={game}
               isHost={isHost}

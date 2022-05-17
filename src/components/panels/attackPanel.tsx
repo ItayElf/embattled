@@ -22,18 +22,23 @@ const AttackPanel: React.FC<Props> = ({
         Back
       </PrimaryButton>
       <div className="grid grid-cols-4 gap-4 mt-2">
-        {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => (
-          <PrimaryButton
-            key={i}
-            className="s1"
-            onClick={() => {
-              onRequestAttack(parseInt(i));
-              onBack();
-            }}
-          >
-            {units[parseInt(i)].name} (#{i})
-          </PrimaryButton>
-        ))}
+        {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => {
+          const unit = units[parseInt(i)];
+          return (
+            (!unit.activated || movedUnit) && (
+              <PrimaryButton
+                key={i}
+                className="s1"
+                onClick={() => {
+                  onRequestAttack(parseInt(i));
+                  onBack();
+                }}
+              >
+                {units[parseInt(i)].name} (#{i})
+              </PrimaryButton>
+            )
+          );
+        })}
       </div>
     </>
   );
