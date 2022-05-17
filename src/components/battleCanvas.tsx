@@ -10,6 +10,7 @@ interface Props {
   moveSquares: number[][] | null;
   attackSquares: AttackDestinations | null;
   onMove: (pos: number[]) => void;
+  onAttack: (pos: number[]) => void;
   isHost: boolean;
 }
 
@@ -45,6 +46,7 @@ const BattleCanvas: React.FC<Props> = ({
   moveSquares,
   attackSquares,
   onMove,
+  onAttack,
   isHost,
 }) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
@@ -93,9 +95,19 @@ const BattleCanvas: React.FC<Props> = ({
       const y = Math.floor((e.clientY - rect.top) / tileSize);
       if (moveSquares) {
         onMove([x, y]);
+      } else if (attackSquares) {
+        onAttack([x, y]);
       }
     },
-    [tileSize, moveSquares, onMove, game.is_host_turn, isHost]
+    [
+      tileSize,
+      moveSquares,
+      attackSquares,
+      onMove,
+      onAttack,
+      game.is_host_turn,
+      isHost,
+    ]
   );
 
   const drawUnits = useCallback(

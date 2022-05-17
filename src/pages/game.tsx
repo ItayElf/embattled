@@ -58,6 +58,13 @@ export default function GamePage() {
     },
     [index, ws]
   );
+  const onAttack = useCallback(
+    async (pos: number[]) => {
+      if (!ws) return;
+      ws.send(JSON.stringify({ type: "attack_action", pos, id: index }));
+    },
+    [index, ws]
+  );
 
   useEffect(() => {
     if (user && !ws) {
@@ -78,6 +85,7 @@ export default function GamePage() {
           setGame(JSON.parse(res.content));
           setIndex(-1);
           setMoveSquares(null);
+          setAttackSquares(null);
         } else if (res.type === "move") {
           setMoveSquares(JSON.parse(res.content));
         } else if (res.type === "attack") {
@@ -113,6 +121,7 @@ export default function GamePage() {
           moveSquares={moveSquares}
           attackSquares={attackSquares}
           onMove={onMove}
+          onAttack={onAttack}
           isHost={isHost}
         />
         <div className="w-full">
