@@ -42,6 +42,7 @@ const ActionPanel: React.FC<Props> = ({
             setScreen={setScreen}
             yourTurn={yourTurn}
             moved={game.moved_unit !== null}
+            ended={game.ended}
           />
         )}
         {screen === "units" && (
@@ -95,9 +96,15 @@ interface ActionProps {
   setScreen: (screen: string) => void;
   yourTurn: boolean;
   moved: boolean;
+  ended: boolean;
 }
 
-const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn, moved }) => {
+const Actions: React.FC<ActionProps> = ({
+  setScreen,
+  yourTurn,
+  moved,
+  ended,
+}) => {
   return (
     <div className="grid grid-cols-3 gap-4">
       <PrimaryButton className="h6" onClick={() => setScreen("units")}>
@@ -106,7 +113,7 @@ const Actions: React.FC<ActionProps> = ({ setScreen, yourTurn, moved }) => {
       <PrimaryButton className="h6" onClick={() => setScreen("oppunits")}>
         Opp. Units
       </PrimaryButton>
-      {yourTurn ? (
+      {yourTurn && !ended ? (
         <>
           <PrimaryButton
             disabled={moved}

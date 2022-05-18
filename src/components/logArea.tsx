@@ -25,6 +25,7 @@ const LogArea: React.FC<Props> = ({ messages, className }) => {
         Logs
       </div>
       <div className="flex-1 pl-4 space-y-3 overflow-auto">
+        <div />
         {almostAllMessages.map((m, i) => (
           <LogTile message={m} key={i} />
         ))}
@@ -44,10 +45,15 @@ interface LogProps {
 }
 const LogTile: React.FC<LogProps> = ({ message }) => {
   if (message.type === "log") {
-    return <div className="b1">{message.content}</div>;
+    return (
+      <div
+        className="b1"
+        dangerouslySetInnerHTML={{ __html: message.content }}
+      />
+    );
   } else if (message.type === "turn") {
     return (
-      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mt-4 mb-2 py-4">
+      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mb-2 py-4">
         Turn {message.turn}
       </div>
     );

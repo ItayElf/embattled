@@ -9,4 +9,5 @@ export default interface Game {
   is_host_turn: boolean;
   moved_unit: number | null;
   turn_counter: number;
+  ended: boolean;
 }
