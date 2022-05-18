@@ -112,7 +112,9 @@ export default function Rooms() {
                 >
                   <td className="py-2 pl-6">{r.name}</td>
                   <td className="py-2">{`${r.mode.name} (${r.mode.points}P)`}</td>
-                  <td className="py-2">{r.host.name}</td>
+                  <td className="py-2">
+                    {r.host.name} ({r.host.rating})
+                  </td>
                   <td className="py-2">
                     {r.host.name !== user.name && (
                       <PrimaryButton

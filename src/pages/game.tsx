@@ -90,6 +90,10 @@ export default function GamePage() {
           setIndex(-1);
           setMoveSquares(null);
           setAttackSquares(null);
+          if (game.ended) {
+            ws.send(JSON.stringify({ type: "close" }));
+            ws.close();
+          }
         } else if (res.type === "move") {
           setMoveSquares(JSON.parse(res.content));
         } else if (res.type === "attack") {
