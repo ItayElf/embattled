@@ -9,9 +9,15 @@ interface Props {
   };
   onBack: () => void;
   isOwner: boolean;
+  originalValue: number;
 }
 
-const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
+const UnitsPanel: React.FC<Props> = ({
+  units,
+  onBack,
+  isOwner,
+  originalValue,
+}) => {
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
   const [index, setIndex] = useState(-1);
 
@@ -19,7 +25,7 @@ const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
     return (
       <>
         <PrimaryButton
-          className="s2"
+          className="s2 absolute"
           onClick={() => {
             setSelectedUnit(null);
             setIndex(-1);
@@ -27,10 +33,10 @@ const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
         >
           Back
         </PrimaryButton>
+        <h5 className="h5 text-center mb-4 font-bold">
+          {selectedUnit.name} - {selectedUnit.clas} (#{index})
+        </h5>
         <div>
-          <h5 className="h5 text-center font-bold">
-            {selectedUnit.name} - {selectedUnit.clas} (#{index})
-          </h5>
           <div className="flex space-x-4">
             <div className="w-full">
               <p className="h6 text-center">
@@ -108,11 +114,19 @@ const UnitsPanel: React.FC<Props> = ({ units, onBack, isOwner }) => {
     );
   }
 
+  const relative = Object.values(units).reduce(
+    (s, u) => s + Math.floor((u.cost * u.unit_size) / u.unit_size_max),
+    0
+  );
   return (
     <>
-      <PrimaryButton className="s2" onClick={onBack}>
+      <PrimaryButton className="s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
+      <h5 className="h5 text-center font-bold">
+        {isOwner ? "Your" : "Opponent's"} Army ({relative}/{originalValue}{" "}
+        points)
+      </h5>
       <div className="grid grid-cols-4 gap-4 mt-2">
         {Object.keys(units).map((i) => (
           <PrimaryButton

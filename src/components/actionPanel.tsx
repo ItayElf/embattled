@@ -49,6 +49,9 @@ const ActionPanel: React.FC<Props> = ({
             units={isHost ? game.host.army : game.joiner.army}
             onBack={() => setScreen("")}
             isOwner
+            originalValue={
+              isHost ? game.host.original_value : game.joiner.original_value
+            }
           />
         )}
         {screen === "oppunits" && (
@@ -56,6 +59,9 @@ const ActionPanel: React.FC<Props> = ({
             units={isHost ? game.joiner.army : game.host.army}
             onBack={() => setScreen("")}
             isOwner={false}
+            originalValue={
+              isHost ? game.joiner.original_value : game.host.original_value
+            }
           />
         )}
         {screen === "move" && (

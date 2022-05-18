@@ -12,9 +12,10 @@ interface Props {
 const MovePanel: React.FC<Props> = ({ units, onBack, onRequestMove }) => {
   return (
     <>
-      <PrimaryButton className="s2" onClick={onBack}>
+      <PrimaryButton className="s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
+      <h5 className="h5 text-center font-bold">Move Unit</h5>
       <div className="grid grid-cols-4 gap-4 mt-2">
         {Object.keys(units).map((i) => {
           const unit = units[parseInt(i)];

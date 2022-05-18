@@ -18,9 +18,10 @@ const AttackPanel: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <PrimaryButton className="s2" onClick={onBack}>
+      <PrimaryButton className="s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
+      <h5 className="h5 text-center font-bold">Attack</h5>
       <div className="grid grid-cols-4 gap-4 mt-2">
         {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => {
           const unit = units[parseInt(i)];
