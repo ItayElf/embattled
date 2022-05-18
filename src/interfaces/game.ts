@@ -10,4 +10,6 @@ export default interface Game {
   moved_unit: number | null;
   turn_counter: number;
   ended: boolean;
+  host_visible: number[][];
+  joiner_visible: number[][];
 }

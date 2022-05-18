@@ -30,6 +30,7 @@ export default function GamePage() {
   const [attackSquares, setAttackSquares] = useState<AttackDestinations | null>(
     null
   );
+  const [visible, setVisible] = useState<number[][]>([]);
   const [msgs, setMsgs] = useState<LogMessage[]>([]);
   const user = useCurrentUser(true);
   const navigate = useNavigate();
@@ -85,7 +86,10 @@ export default function GamePage() {
         } else if (res.type === "request") {
           if (res.content === "army") ws.send(army);
         } else if (res.type === "game_data") {
-          setGame(JSON.parse(res.content));
+          const game = JSON.parse(res.content) as Game;
+          const isHost = game.host.name === user.name;
+          setGame(game);
+          setVisible(isHost ? game.host_visible : game.joiner_visible);
           setIndex(-1);
           setMoveSquares(null);
           setAttackSquares(null);
@@ -98,7 +102,7 @@ export default function GamePage() {
         }
       };
     }
-  }, [hash, user, navigate, army, ws]);
+  }, [hash, user, navigate, army, ws, game]);
 
   if (!state || !state.army) return <Navigate to={"/rooms"} />;
   if (!user) return <Loading className="h-screen" />;
@@ -115,8 +119,6 @@ export default function GamePage() {
     );
   }
 
-  const isHost = game.host.name === user.name;
-
   return (
     <>
       <Header user={user} />
@@ -125,15 +127,16 @@ export default function GamePage() {
           game={game}
           moveSquares={moveSquares}
           attackSquares={attackSquares}
+          visible={visible}
           onMove={onMove}
           onAttack={onAttack}
-          isHost={isHost}
+          isHost={game.host.name === user.name}
         />
         <div className="w-full">
           <div className="h-full max-h-[816px]">
             <ActionPanel
               game={game}
-              isHost={isHost}
+              isHost={game.host.name === user.name}
               className="w-full h-1/2"
               onRequestMove={onRequestMove}
               onRequestAttack={onRequestAttack}

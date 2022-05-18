@@ -9,6 +9,7 @@ interface Props {
   game: Game;
   moveSquares: number[][] | null;
   attackSquares: AttackDestinations | null;
+  visible: number[][];
   onMove: (pos: number[]) => void;
   onAttack: (pos: number[]) => void;
   isHost: boolean;
@@ -45,6 +46,7 @@ const BattleCanvas: React.FC<Props> = ({
   game,
   moveSquares,
   attackSquares,
+  visible,
   onMove,
   onAttack,
   isHost,
@@ -62,6 +64,18 @@ const BattleCanvas: React.FC<Props> = ({
       return dirt;
     },
     [dirt, water]
+  );
+
+  const isVisible = useCallback(
+    (pos: number[]) => {
+      for (let i = visible.length - 1; i > -1; i--) {
+        if (visible[i][0] === pos[0] && visible[i][1] === pos[1]) {
+          return true;
+        }
+      }
+      return false;
+    },
+    [visible]
   );
 
   useEffect(() => {
@@ -114,6 +128,7 @@ const BattleCanvas: React.FC<Props> = ({
     (ctx: CanvasRenderingContext2D, unit: HTMLImageElement, player: Player) => {
       Object.keys(player.army).forEach((i) => {
         const u = player.army[parseInt(i)];
+        if (!isVisible(u.position)) return;
         const height = tileSize - 2;
         const width = (unit.width * height) / unit.height;
 
@@ -136,7 +151,7 @@ const BattleCanvas: React.FC<Props> = ({
         );
       });
     },
-    [tileSize]
+    [tileSize, isVisible]
   );
 
   const drawSquare = useCallback(
@@ -174,7 +189,6 @@ const BattleCanvas: React.FC<Props> = ({
 
     // if (typeof canv.onclick == "undefined")
     canv.onclick = (e) => handleClick(canv, e);
-
     for (let i = 0; i < game.map.length; i++) {
       const x = i % game.mode.board_size;
       const y = Math.floor(i / game.mode.board_size);
@@ -187,6 +201,9 @@ const BattleCanvas: React.FC<Props> = ({
         tileSize,
         tileSize
       );
+      if (!isVisible([x, y])) {
+        drawSquare(ctx, x, y, "rgba(0,0,0,0.5)");
+      }
     }
     for (let i = 0; i < game.mode.board_size; i++) {
       ctx.textAlign = "start";
@@ -218,6 +235,7 @@ const BattleCanvas: React.FC<Props> = ({
   }, [
     dirt,
     drawUnits,
+    drawSquare,
     game.host,
     game.joiner,
     game.map,
@@ -226,8 +244,10 @@ const BattleCanvas: React.FC<Props> = ({
     handleClick,
     highlightMoves,
     hostUnit,
+    isVisible,
     joinerUnit,
     tileSize,
+    visible,
     water,
   ]);
 
