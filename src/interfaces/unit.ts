@@ -3,6 +3,7 @@ import Attribute from "./attribute";
 export default interface Unit {
   name: string;
   clas: string;
+  cost: number;
   unit_size_max: number;
   unit_size: number;
   hitpoints: number;

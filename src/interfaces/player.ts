@@ -5,4 +5,5 @@ export default interface Player {
   rating: number;
   army: { [key: number]: Unit };
   faction: string;
+  original_value: string;
 }
