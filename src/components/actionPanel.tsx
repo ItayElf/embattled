@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Game from "../interfaces/game";
-import AttackPanel from "./panels/attackPanel";
+import HandleActionPanel from "./panels/handleActionPanel";
 import MovePanel from "./panels/movePanel";
 import UnitsPanel from "./panels/unitsPanel";
 import PrimaryButton from "./primaryButton";
@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   onRequestMove: (id: number) => void;
   onRequestAttack: (id: number) => void;
+  onRequestHalt: (id: number) => void;
   resetMove: () => void;
 }
 
@@ -20,6 +21,7 @@ const ActionPanel: React.FC<Props> = ({
   className,
   onRequestMove,
   onRequestAttack,
+  onRequestHalt,
   resetMove,
 }) => {
   const [screen, setScreen] = useState("");
@@ -39,6 +41,10 @@ const ActionPanel: React.FC<Props> = ({
       <div className="pt-2">
         {screen === "" && (
           <Actions
+            onRequestAttack={() =>
+              game.moved_unit && onRequestAttack(game.moved_unit)
+            }
+            onRequestHalt={() => onRequestHalt(-1)}
             setScreen={setScreen}
             yourTurn={yourTurn}
             moved={game.moved_unit !== null}
@@ -76,13 +82,25 @@ const ActionPanel: React.FC<Props> = ({
           />
         )}
         {screen === "attack" && (
-          <AttackPanel
+          <HandleActionPanel
+            title="Attack"
             movedUnit={game.moved_unit}
             units={isHost ? game.host.army : game.joiner.army}
             onBack={() => {
               setScreen("");
             }}
-            onRequestAttack={onRequestAttack}
+            onRequestAction={onRequestAttack}
+          />
+        )}
+        {screen === "halt" && (
+          <HandleActionPanel
+            title="Halt"
+            movedUnit={game.moved_unit}
+            units={isHost ? game.host.army : game.joiner.army}
+            onBack={() => {
+              setScreen("");
+            }}
+            onRequestAction={onRequestHalt}
           />
         )}
       </div>
@@ -93,6 +111,8 @@ const ActionPanel: React.FC<Props> = ({
 export default ActionPanel;
 
 interface ActionProps {
+  onRequestAttack: () => void;
+  onRequestHalt: () => void;
   setScreen: (screen: string) => void;
   yourTurn: boolean;
   moved: boolean;
@@ -100,6 +120,8 @@ interface ActionProps {
 }
 
 const Actions: React.FC<ActionProps> = ({
+  onRequestAttack,
+  onRequestHalt,
   setScreen,
   yourTurn,
   moved,
@@ -122,8 +144,17 @@ const Actions: React.FC<ActionProps> = ({
           >
             Move Unit
           </PrimaryButton>
-          <PrimaryButton className="h6" onClick={() => setScreen("attack")}>
+          <PrimaryButton
+            className="h6"
+            onClick={() => (moved ? onRequestAttack() : setScreen("attack"))}
+          >
             Attack
+          </PrimaryButton>
+          <PrimaryButton
+            className="h6"
+            onClick={() => (moved ? onRequestHalt() : setScreen("halt"))}
+          >
+            {moved ? "Pass Round" : "Halt"}
           </PrimaryButton>
         </>
       ) : (

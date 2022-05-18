@@ -38,22 +38,19 @@ export default function GamePage() {
   const state = location.state as LocationState;
   const army = state.army;
 
-  const onRequestMove = useCallback(
-    async (id: number) => {
-      if (!ws) return;
-      ws.send(JSON.stringify({ type: "move_request", id }));
-      setIndex(id);
+  const onRequestGenerator = useCallback(
+    (type: string) => {
+      return (id: number) => {
+        if (!ws) return;
+        ws.send(JSON.stringify({ type, id }));
+        setIndex(id);
+      };
     },
     [ws]
   );
-  const onRequestAttack = useCallback(
-    async (id: number) => {
-      if (!ws) return;
-      ws.send(JSON.stringify({ type: "attack_request", id }));
-      setIndex(id);
-    },
-    [ws]
-  );
+  const onRequestMove = onRequestGenerator("move_request");
+  const onRequestAttack = onRequestGenerator("attack_request");
+  const onRequestHalt = onRequestGenerator("halt");
 
   const onMove = useCallback(
     async (pos: number[]) => {
@@ -140,6 +137,7 @@ export default function GamePage() {
               className="w-full h-1/2"
               onRequestMove={onRequestMove}
               onRequestAttack={onRequestAttack}
+              onRequestHalt={onRequestHalt}
               resetMove={() => setMoveSquares(null)}
             />
             <LogArea messages={msgs} className="w-full h-1/2" />

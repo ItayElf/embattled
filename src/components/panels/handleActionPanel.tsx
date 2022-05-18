@@ -2,26 +2,28 @@ import Unit from "../../interfaces/unit";
 import PrimaryButton from "../primaryButton";
 
 interface Props {
+  title: string;
   movedUnit: number | null;
   units: {
     [key: number]: Unit;
   };
   onBack: () => void;
-  onRequestAttack: (id: number) => void;
+  onRequestAction: (id: number) => void;
 }
 
-const AttackPanel: React.FC<Props> = ({
+const HandleActionPanel: React.FC<Props> = ({
+  title,
   movedUnit,
   units,
   onBack,
-  onRequestAttack,
+  onRequestAction,
 }) => {
   return (
     <>
       <PrimaryButton className="s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
-      <h5 className="h5 text-center font-bold">Attack</h5>
+      <h5 className="h5 text-center font-bold">{title}</h5>
       <div className="grid grid-cols-4 gap-4 mt-2">
         {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => {
           const unit = units[parseInt(i)];
@@ -31,7 +33,7 @@ const AttackPanel: React.FC<Props> = ({
                 key={i}
                 className="s1"
                 onClick={() => {
-                  onRequestAttack(parseInt(i));
+                  onRequestAction(parseInt(i));
                   onBack();
                 }}
               >
@@ -45,4 +47,4 @@ const AttackPanel: React.FC<Props> = ({
   );
 };
 
-export default AttackPanel;
+export default HandleActionPanel;
