@@ -3,4 +3,5 @@ export default interface Mode {
   name: string;
   points: number;
   board_size: number;
+  win_condition: string;
 }

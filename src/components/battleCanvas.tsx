@@ -15,7 +15,7 @@ interface Props {
   isHost: boolean;
 }
 
-const getAltColor = (faction: string) => {
+export const getAltColor = (faction: string) => {
   switch (faction) {
     case "England":
       return "#FFFAEF";
@@ -257,7 +257,7 @@ const BattleCanvas: React.FC<Props> = ({
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
       className="w-[816px] h-[816px]"
-    ></canvas>
+    />
   );
 };
 
