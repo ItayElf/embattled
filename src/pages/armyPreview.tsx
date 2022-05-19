@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router";
+import { useCallback, useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router";
 import ArmyViewer from "../components/armyViewer";
 import Header from "../components/header";
 import Loading from "../components/loading";
@@ -12,13 +12,6 @@ import Mode from "../interfaces/mode";
 import { getFetch } from "../utils/fetchUtils";
 import { getFaction } from "./armybuilderHome";
 
-const saveArmy = (oldName: string, army: Army) => {
-  const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
-  const newArmies = armies.map((a) => (a.name !== oldName ? a : army));
-  localStorage.setItem("armies", JSON.stringify(newArmies));
-  return newArmies;
-};
-
 export default function ArmyPreview() {
   const { name } = useParams();
   const [armies, setArmies] = useState(
@@ -27,9 +20,10 @@ export default function ArmyPreview() {
   const armiesFiltered = armies.filter((a) => a.name === name);
   const army = armiesFiltered[0];
   const [modes, setModes] = useState<Mode[] | null>(null);
-  const [selectedMode, setSelectedMode] = useState((army.mode.id ?? "") + "");
-  const [selectedName, setSelectedName] = useState(army.name);
+  const [selectedMode, setSelectedMode] = useState((army?.mode?.id ?? "") + "");
+  const [selectedName, setSelectedName] = useState(army?.name ?? "");
   const user = useCurrentUser(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getFetch(BASE_API + "modes").then((res) =>
@@ -37,7 +31,20 @@ export default function ArmyPreview() {
     );
   }, []);
 
-  if (armiesFiltered.length !== 1) {
+  const saveArmy = useCallback(
+    (oldName: string, army: Army) => {
+      const armies = JSON.parse(
+        localStorage.getItem("armies") ?? "[]"
+      ) as Army[];
+      const newArmies = armies.map((a) => (a.name !== oldName ? a : army));
+      localStorage.setItem("armies", JSON.stringify(newArmies));
+      setArmies(newArmies);
+      navigate(`/army/${army.name}`);
+    },
+    [navigate]
+  );
+
+  if (army === undefined) {
     return <Navigate to="/armybuilder" />;
   }
 
@@ -73,18 +80,20 @@ export default function ArmyPreview() {
               ))}
             </select>
             <PrimaryButton
-              className="h6 w-72"
-              disabled={selectedMode === army.mode.id + ""}
+              className="h6 w-96"
+              disabled={
+                selectedMode === army.mode.id + "" &&
+                (selectedName === army.name || !selectedName)
+              }
               onClick={() =>
-                setArmies(
-                  saveArmy(army.name, {
-                    ...army,
-                    mode: modes.filter((m) => m.id + "" === selectedMode)[0],
-                  })
-                )
+                saveArmy(army.name, {
+                  ...army,
+                  mode: modes.filter((m) => m.id + "" === selectedMode)[0],
+                  name: selectedName,
+                })
               }
             >
-              Save Mode
+              Save Changes
             </PrimaryButton>
             <PrimaryButton className="h6 w-72">Edit Units</PrimaryButton>
           </div>
