@@ -7,6 +7,7 @@ interface Props {
   required?: boolean;
   value: string;
   setValue: (value: string) => void;
+  disabled?: boolean;
   id?: string;
 }
 
@@ -19,6 +20,7 @@ const TextField: React.FC<Props> = ({
   value,
   setValue,
   required,
+  disabled,
   id,
 }) => {
   return (
@@ -31,6 +33,7 @@ const TextField: React.FC<Props> = ({
         placeholder={label}
         onChange={(e) => setValue(e.target.value)}
         required={required}
+        disabled={disabled === true}
       />
       <label
         htmlFor={id ?? label}

@@ -5,13 +5,13 @@ import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
-import Army from "../interfaces/army";
+import Army, { ArmyUnit } from "../interfaces/army";
 import { postFetch } from "../utils/fetchUtils";
 
 const getPoints = (army: Army) => army.units.reduce((s, u) => s + u.cost, 0);
-export const getFaction = (army: Army) => {
+export const getFaction = (units: ArmyUnit[]) => {
   let f: string | null = null;
-  army.units.forEach((u) => {
+  units.forEach((u) => {
     if (u.faction) f = u.faction;
   });
   return f ?? "Mercenaries";
@@ -65,7 +65,7 @@ export default function ArmybuilderHome() {
                   {a.mode.name} ({a.mode.points}P)
                 </td>
                 <td className="py-2">{getPoints(a)} Points</td>
-                <td className="py-2">{getFaction(a)}</td>
+                <td className="py-2">{getFaction(a.units)}</td>
                 <td className="py-2 flex space-x-2 max-w-[160px]">
                   <PrimaryButton onClick={() => validate(a)} className="s2">
                     Validate

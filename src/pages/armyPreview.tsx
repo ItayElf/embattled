@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
 import ArmyViewer from "../components/armyViewer";
 import Header from "../components/header";
 import Loading from "../components/loading";
@@ -26,9 +27,9 @@ export default function ArmyPreview() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getFetch(BASE_API + "modes").then((res) =>
-      res.text().then((t) => setModes(JSON.parse(t)))
-    );
+    getFetch(BASE_API + "modes")
+      .then((res) => res.text())
+      .then((t) => setModes(JSON.parse(t)));
   }, []);
 
   const saveArmy = useCallback(
@@ -54,7 +55,7 @@ export default function ArmyPreview() {
     <>
       <Header user={user} />
       <div className="flex px-6 space-x-2">
-        <div className="mt-24 flex flex-col items-center max-w-[600px]">
+        <div className="mt-24 flex flex-col items-center w-full">
           <TextField
             type="text"
             value={selectedName}
@@ -63,9 +64,9 @@ export default function ArmyPreview() {
             className="text-[64px]"
             wrapperClassName="mb-4 w-full"
           />
-          <div className="flex space-x-4 max-w-full">
+          <div className="flex space-x-4 w-full">
             <select
-              className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              className="w-1/2 rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
               value={selectedMode}
               onChange={(e) => setSelectedMode(e.target.value)}
               required
@@ -80,7 +81,7 @@ export default function ArmyPreview() {
               ))}
             </select>
             <PrimaryButton
-              className="h6 w-96"
+              className="h6 w-1/4"
               disabled={
                 selectedMode === army.mode.id + "" &&
                 (selectedName === army.name || !selectedName)
@@ -95,7 +96,11 @@ export default function ArmyPreview() {
             >
               Save Changes
             </PrimaryButton>
-            <PrimaryButton className="h6 w-72">Edit Units</PrimaryButton>
+            <Link to={`/armyunits/${army.name}`} className="w-1/4">
+              <PrimaryButton className="h6 w-full h-full">
+                Edit Units
+              </PrimaryButton>
+            </Link>
           </div>
           <h4 className="h4 mt-8">Units</h4>
           <table className="w-full">
@@ -129,7 +134,7 @@ export default function ArmyPreview() {
         </div>
         <ArmyViewer
           mode={modes.filter((m) => m.id + "" === selectedMode)[0]}
-          faction={getFaction(army)}
+          faction={getFaction(army.units)}
           units={army.units}
           className="mt-24"
         />

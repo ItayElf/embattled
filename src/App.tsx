@@ -4,6 +4,7 @@ import ArmyPreview from "./pages/armyPreview";
 import Auth from "./pages/auth";
 import GamePage from "./pages/game";
 import Rooms from "./pages/rooms";
+import UnitEditor from "./pages/unitsEditor";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/game/:hash" element={<GamePage />} />
       <Route path="/armybuilder" element={<ArmybuilderHome />} />
       <Route path="/army/:name" element={<ArmyPreview />} />
+      <Route path="/armyunits/:name" element={<UnitEditor />} />
     </Routes>
   );
 }

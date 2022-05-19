@@ -65,13 +65,13 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(
-          i + "",
+          i + 1 + "",
           u.position[0] * tileSize + tileSize / 2,
           u.position[1] * tileSize + tileSize / 2
         );
         ctx.fillStyle = getAltColor(faction + " Alt");
         ctx.fillText(
-          i + "",
+          i + 1 + "",
           (mode.board_size - u.position[0] - 1) * tileSize + tileSize / 2,
           (mode.board_size - u.position[1] - 1) * tileSize + tileSize / 2
         );
@@ -99,6 +99,9 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
         tileSize
       );
     }
+
+    drawUnits(ctx);
+
     for (let i = 0; i < mode.board_size; i++) {
       ctx.textAlign = "start";
       ctx.font = "12px serif";
@@ -110,8 +113,6 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
       ctx.fillStyle = "white";
       ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
     }
-
-    drawUnits(ctx);
 
     for (let i = 0; i <= mode.board_size; i++) {
       ctx.strokeStyle = "black";
