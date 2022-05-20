@@ -15,7 +15,7 @@ const Header: React.FC<Props> = ({ user }) => {
           <Logo className="h-14" />
           <h4 className="h4 text-white">Embattled</h4>
         </div>
-        <Link to={"#"} className="h5 text-white">
+        <Link to={"/rooms"} className="h5 text-white">
           Home
         </Link>
         <Link to={"/armybuilder"} className="h5 text-white">

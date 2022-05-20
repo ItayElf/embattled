@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/imgs/Logo.svg";
 import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
@@ -16,6 +16,7 @@ export default function Auth({ signIn }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
@@ -43,8 +44,9 @@ export default function Auth({ signIn }: Props) {
         setError((e + "").replace("Error: ", ""));
         return;
       }
+      navigate("/rooms");
     },
-    [email, name, password, signIn]
+    [email, name, password, signIn, navigate]
   );
 
   return (
