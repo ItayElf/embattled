@@ -2,6 +2,7 @@ import { useState } from "react";
 import Unit from "../../interfaces/unit";
 import PrimaryButton from "../primaryButton";
 import ProgressBar from "../progressBar";
+import Tooltip from "../tooltip";
 
 interface Props {
   units: {
@@ -94,12 +95,21 @@ const UnitsPanel: React.FC<Props> = ({
               </div>
             </div>
             <div className="w-1/2 space-y-2 s1 mt-2">
-              <p>
-                Attributes:{" "}
+              <div className="flex space-x-1">
+                <p>Attributes: </p>
                 {selectedUnit.attributes.length !== 0
-                  ? selectedUnit.attributes.map((a) => a.name).join(", ")
+                  ? selectedUnit.attributes.map((a, i) => (
+                      <div key={i}>
+                        <Tooltip title={a.description}>
+                          <p className="underline">
+                            {a.name}
+                            {i !== selectedUnit.attributes.length - 1 && ", "}
+                          </p>
+                        </Tooltip>
+                      </div>
+                    ))
                   : "None"}
-              </p>
+              </div>
               <p>
                 Keywords:{" "}
                 {selectedUnit.keywords.length !== 0
