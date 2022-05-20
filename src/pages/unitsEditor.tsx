@@ -6,6 +6,7 @@ import Header from "../components/header";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
+import UnitDataViewer from "../components/unitDataViewer";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Army, { ArmyUnit } from "../interfaces/army";
@@ -22,6 +23,9 @@ export default function UnitEditor() {
   const army = armiesFiltered[0];
   const [units, setUnits] = useState(army.units);
   const [selectedUnit, setSelectedUnit] = useState(0);
+  const [selectedUnitData, setSelectedUnitData] = useState<UnitData | null>(
+    null
+  );
   const navigate = useNavigate();
 
   const filteredUnits = units.filter((u) => u.name !== "" && u.cost !== 0);
@@ -121,14 +125,22 @@ export default function UnitEditor() {
             boardSize={army.mode.board_size}
             onChangeUnit={onChangeUnit}
             onDelete={onDelete}
+            onViewUnit={setSelectedUnitData}
             className="w-full"
           />
         </div>
-        <ArmyViewer
-          mode={army.mode}
-          faction={getFaction(filteredUnits)}
-          units={filteredUnits}
-        />
+        <div className="relative">
+          <ArmyViewer
+            mode={army.mode}
+            faction={getFaction(filteredUnits)}
+            units={filteredUnits}
+          />
+          <UnitDataViewer
+            unitData={selectedUnitData}
+            onClose={() => setSelectedUnitData(null)}
+            className="absolute inset-0"
+          />
+        </div>
       </div>
     </>
   );
@@ -140,6 +152,7 @@ interface Props {
   className?: string;
   boardSize: number;
   onChangeUnit: (unit: ArmyUnit) => void;
+  onViewUnit: (unit: UnitData) => void;
   onDelete: () => void;
 }
 
@@ -149,6 +162,7 @@ const UnitDataArea: React.FC<Props> = ({
   className,
   boardSize,
   onChangeUnit,
+  onViewUnit,
   onDelete,
 }) => {
   const [selectedName, setSelectedName] = useState(unit.name);
@@ -275,7 +289,10 @@ const UnitDataArea: React.FC<Props> = ({
               </td>
               <td className="py-2">{u.cost}</td>
               <td className="py-2">{u.range === null ? "No" : "Yes"}</td>
-              <td className="py-2 text-primary-900 underline cursor-pointer">
+              <td
+                className="py-2 text-primary-900 underline cursor-pointer"
+                onClick={() => onViewUnit(u)}
+              >
                 View
               </td>
             </tr>
