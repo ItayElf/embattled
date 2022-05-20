@@ -21,6 +21,7 @@ const UnitDataViewer: React.FC<Props> = ({ unitData, onClose, className }) => {
             <h5 className="h5 text-center mb-4 font-bold">
               {unitData.name} - {unitData.clas}
             </h5>
+            <h5 className="s1 text-center mb-4">{unitData.description}</h5>
             <div className="flex space-x-4">
               <div className="w-full">
                 <p className="h6 text-center">
