@@ -35,7 +35,7 @@ const ActionPanel: React.FC<Props> = ({
       </h1>
       <div className="h-px bg-primary-100" />
       <p className="text-center h6">
-        {yourTurn ? "Your Turn" : "Opponent's Turn"}
+        {game.ended ? "Game Ended" : yourTurn ? "Your Turn" : "Opponent's Turn"}
       </p>
       <div className="h-px bg-primary-100" />
       <div className="pt-2">

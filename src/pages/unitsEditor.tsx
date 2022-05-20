@@ -115,7 +115,11 @@ export default function UnitEditor() {
                 +
               </PrimaryButton>
             </div>
-            <PrimaryButton className="s1 mt-4" onClick={save}>
+            <PrimaryButton
+              className="s1 mt-4"
+              onClick={save}
+              disabled={filteredUnits.length === 0}
+            >
               Save Units
             </PrimaryButton>
           </div>

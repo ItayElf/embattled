@@ -24,7 +24,7 @@ const LogArea: React.FC<Props> = ({ messages, className }) => {
       <div className="bg-primary-600 shadow-sm h5 pl-9 py-1 text-white">
         Logs
       </div>
-      <div className="flex-1 pl-4 space-y-3 overflow-auto scrollbar scrollbar-thumb-primary-900 scrollbar-track-primary-100">
+      <div className="flex-1 pl-4 space-y-3 overflow-auto pr-2 scrollbar scrollbar-thumb-primary-900 scrollbar-track-primary-100">
         <div />
         {almostAllMessages.map((m, i) => (
           <LogTile message={m} key={i} />
