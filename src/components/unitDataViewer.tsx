@@ -25,7 +25,7 @@ const UnitDataViewer: React.FC<Props> = ({ unitData, onClose, className }) => {
             <div className="flex space-x-4">
               <div className="w-full">
                 <p className="h6 text-center">
-                  Unit Size: {unitData.unit_size}
+                  Unit Size: {unitData.unit_size} ({unitData.hitpoints} HP)
                 </p>
                 <ProgressBar
                   max={unitData.unit_size}
@@ -87,15 +87,17 @@ const UnitDataViewer: React.FC<Props> = ({ unitData, onClose, className }) => {
               </div>
             </div>
           </div>
-          <div>
-            <h6 className="h6 underline  mt-2">Attributes</h6>
-            {unitData.attributes.map((a, i) => (
-              <p className="h6" key={i}>
-                <strong className="text-primary-900">{a.name} - </strong>
-                <span className="s1">{a.description}</span>
-              </p>
-            ))}
-          </div>
+          {unitData.attributes.length !== 0 && (
+            <div>
+              <h6 className="h6 underline  mt-2">Attributes</h6>
+              {unitData.attributes.map((a, i) => (
+                <p className="h6" key={i}>
+                  <strong className="text-primary-900">{a.name} - </strong>
+                  <span className="s1">{a.description}</span>
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

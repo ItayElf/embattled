@@ -26,9 +26,9 @@ export const getAltColor = (faction: string) => {
     case "India Alt":
       return "#128807";
     case "Mongolia":
-      return "#C4272F";
+      return "#FFFFFF";
     case "Mongolia Alt":
-      return "#F9CF02";
+      return "#121212";
     case "Norway":
       return "#BA0C2F";
     case "Norway: Alt":
