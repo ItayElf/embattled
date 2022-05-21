@@ -1,12 +1,13 @@
-import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/header";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Army, { ArmyUnit } from "../interfaces/army";
-import { postFetch } from "../utils/fetchUtils";
+import Mode from "../interfaces/mode";
+import { getFetch, postFetch } from "../utils/fetchUtils";
 
 const getPoints = (army: Army) => army.units.reduce((s, u) => s + u.cost, 0);
 export const getFaction = (units: ArmyUnit[]) => {
@@ -17,9 +18,15 @@ export const getFaction = (units: ArmyUnit[]) => {
   return f ?? "Mercenaries";
 };
 
+const reg = /^Untitled (\d+)$/;
+
 export default function ArmybuilderHome() {
+  const [modes, setModes] = useState<Mode[] | null>(null);
+  const [armies, setArmies] = useState(
+    JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[]
+  );
   const user = useCurrentUser(true);
-  const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
+  const navigate = useNavigate();
 
   const validate = useCallback(async (army: Army) => {
     const res = await postFetch(BASE_API + "rooms/validate_army", {
@@ -34,14 +41,47 @@ export default function ArmybuilderHome() {
     }
   }, []);
 
-  if (!user) return <Loading className="h-screen" />;
+  useEffect(() => {
+    getFetch(BASE_API + "modes")
+      .then((res) => res.text())
+      .then((t) => setModes(JSON.parse(t)));
+  }, []);
+
+  const onNewArmy = useCallback(() => {
+    if (!modes) return;
+    const latestUntitled = armies
+      .map((a) => a.name)
+      .filter((a) => reg.test(a))
+      .map((a) => parseInt((reg.exec(a) ?? "1")[1]))
+      .sort((a, b) => b - a);
+    if (latestUntitled.length === 0) latestUntitled.push(0);
+    const name = `Untitled ${latestUntitled[0] + 1}`;
+    localStorage.setItem(
+      "armies",
+      JSON.stringify([...armies, { name, units: [], mode: modes[0] }])
+    );
+    navigate(`/army/${name}`);
+  }, [armies, navigate, modes]);
+
+  const onDelete = useCallback(
+    (name: string) => {
+      const newArmies = armies.filter((a) => a.name !== name);
+      localStorage.setItem("armies", JSON.stringify(newArmies));
+      setArmies(newArmies);
+    },
+    [armies]
+  );
+
+  if (!user || !modes) return <Loading className="h-screen" />;
 
   return (
     <>
       <Header user={user} />
       <div className="flex flex-col mt-24 px-24 justify-center items-center">
         <h1 className="h2">All Armies</h1>
-        <PrimaryButton className="w-72">+ New Army</PrimaryButton>
+        <PrimaryButton className="w-72" onClick={onNewArmy}>
+          + New Army
+        </PrimaryButton>
         <table className="w-full mt-4">
           <thead>
             <tr className="bg-primary-600 h6 text-white">
@@ -73,7 +113,12 @@ export default function ArmybuilderHome() {
                   <Link to={`/army/${a.name}`}>
                     <PrimaryButton className="s2">Edit</PrimaryButton>
                   </Link>
-                  <PrimaryButton className="s2">Delete</PrimaryButton>
+                  <PrimaryButton
+                    className="s2"
+                    onClick={() => onDelete(a.name)}
+                  >
+                    Delete
+                  </PrimaryButton>
                 </td>
               </tr>
             ))}

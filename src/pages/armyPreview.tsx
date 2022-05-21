@@ -90,7 +90,7 @@ export default function ArmyPreview() {
                 saveArmy(army.name, {
                   ...army,
                   mode: modes.filter((m) => m.id + "" === selectedMode)[0],
-                  name: selectedName,
+                  name: selectedName.trim(),
                 })
               }
             >

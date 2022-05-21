@@ -21,7 +21,18 @@ export default function UnitEditor() {
   const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
   const armiesFiltered = armies.filter((a) => a.name === name);
   const army = armiesFiltered[0];
-  const [units, setUnits] = useState(army.units);
+  const [units, setUnits] = useState(
+    army.units.length === 0
+      ? [
+          {
+            name: "",
+            cost: 0,
+            position: [0, 0],
+            faction: null,
+          },
+        ]
+      : army.units
+  );
   const [selectedUnit, setSelectedUnit] = useState(0);
   const [selectedUnitData, setSelectedUnitData] = useState<UnitData | null>(
     null
@@ -288,8 +299,10 @@ const UnitDataArea: React.FC<Props> = ({
               </td>
               <td className="py-2">{u.faction ?? "Mercenaries"}</td>
               <td className="py-2">
-                {u.clas.split(" ")[0][0].toUpperCase()}.
-                {u.clas.split(" ")[1][0].toUpperCase()}
+                {u.clas
+                  .split(" ")
+                  .map((t) => t[0].toUpperCase())
+                  .join(".")}
               </td>
               <td className="py-2">{u.cost}</td>
               <td className="py-2">{u.range === null ? "No" : "Yes"}</td>
