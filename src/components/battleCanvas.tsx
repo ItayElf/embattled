@@ -61,6 +61,7 @@ const BattleCanvas: React.FC<Props> = ({
   const [joinerUnit, setJoinerUnit] = useState<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tileSize = CANVAS_SIZE / game.mode.board_size;
+  const boardSize = game.mode.board_size;
 
   const getImage = useCallback(
     (char: string) => {
@@ -117,10 +118,12 @@ const BattleCanvas: React.FC<Props> = ({
       const rect = canvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) / tileSize);
       const y = Math.floor((e.clientY - rect.top) / tileSize);
+      const newX = isHost ? x : boardSize - x - 1;
+      const newY = isHost ? y : boardSize - y - 1;
       if (moveSquares) {
-        onMove([x, y]);
+        onMove([newX, newY]);
       } else if (attackSquares) {
-        onAttack([x, y]);
+        onAttack([newX, newY]);
       }
     },
     [
@@ -131,6 +134,7 @@ const BattleCanvas: React.FC<Props> = ({
       onAttack,
       game.is_host_turn,
       isHost,
+      boardSize,
     ]
   );
 
@@ -142,10 +146,13 @@ const BattleCanvas: React.FC<Props> = ({
         const height = tileSize - 2;
         const width = (unit.width * height) / unit.height;
 
+        const x = isHost ? u.position[0] : boardSize - u.position[0] - 1;
+        const y = isHost ? u.position[1] : boardSize - u.position[1] - 1;
+
         ctx.drawImage(
           unit,
-          u.position[0] * tileSize + (tileSize / 2 - width / 2),
-          u.position[1] * tileSize + (tileSize / 2 - height / 2),
+          x * tileSize + (tileSize / 2 - width / 2),
+          y * tileSize + (tileSize / 2 - height / 2),
           width,
           height
         );
@@ -156,20 +163,22 @@ const BattleCanvas: React.FC<Props> = ({
         ctx.textBaseline = "middle";
         ctx.fillText(
           i,
-          u.position[0] * tileSize + tileSize / 2,
-          u.position[1] * tileSize + tileSize / 2
+          x * tileSize + tileSize / 2,
+          y * tileSize + tileSize / 2
         );
       });
     },
-    [tileSize, isVisible]
+    [tileSize, isVisible, boardSize, isHost]
   );
 
   const drawSquare = useCallback(
     (ctx: CanvasRenderingContext2D, x: number, y: number, color: string) => {
       ctx.fillStyle = color;
-      ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+      const newX = isHost ? x : boardSize - x - 1;
+      const newY = isHost ? y : boardSize - y - 1;
+      ctx.fillRect(newX * tileSize, newY * tileSize, tileSize, tileSize);
     },
-    [tileSize]
+    [tileSize, boardSize, isHost]
   );
 
   const highlightMoves = useCallback(
@@ -200,8 +209,11 @@ const BattleCanvas: React.FC<Props> = ({
     // if (typeof canv.onclick == "undefined")
     canv.onclick = (e) => handleClick(canv, e);
     for (let i = 0; i < game.map.length; i++) {
-      const x = i % game.mode.board_size;
-      const y = Math.floor(i / game.mode.board_size);
+      const [baseX, baseY] = [i % boardSize, Math.floor(i / boardSize)];
+      const x = isHost ? i % boardSize : boardSize - (i % boardSize) - 1;
+      const y = isHost
+        ? Math.floor(i / boardSize)
+        : boardSize - Math.floor(i / boardSize) - 1;
       const letter = game.map[i];
       const img = getImage(letter);
       ctx.drawImage(
@@ -211,24 +223,29 @@ const BattleCanvas: React.FC<Props> = ({
         tileSize,
         tileSize
       );
-      if (!isVisible([x, y])) {
-        drawSquare(ctx, x, y, "rgba(0,0,0,0.5)");
+      if (!isVisible([baseX, baseY])) {
+        drawSquare(ctx, baseX, baseY, "rgba(0,0,0,0.5)");
       }
     }
-    for (let i = 0; i < game.mode.board_size; i++) {
+    for (let i = 0; i < boardSize; i++) {
       ctx.textAlign = "start";
       ctx.font = "12px serif";
       ctx.fillStyle = "white";
-      ctx.fillText(String.fromCharCode(65 + i), i * tileSize + 5, 15);
+      ctx.fillText(
+        String.fromCharCode(65 + (isHost ? i : boardSize - i - 1)),
+        i * tileSize + 5,
+        15
+      );
     }
-    for (let i = 1; i < game.mode.board_size; i++) {
+    for (let i = 1; i < boardSize; i++) {
       ctx.font = "12px serif";
       ctx.fillStyle = "white";
-      ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
+      ctx.fillText((isHost ? i + 1 : boardSize - i) + "", 5, i * tileSize + 15);
     }
 
     if (game.last_move !== null) {
       game.last_move.forEach((pos) => {
+        console.log(pos);
         if (isVisible(pos)) {
           drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 0, 0.5)");
         }
@@ -239,7 +256,7 @@ const BattleCanvas: React.FC<Props> = ({
     drawUnits(ctx, joinerUnit, game.joiner);
     highlightMoves(ctx);
 
-    for (let i = 0; i <= game.mode.board_size; i++) {
+    for (let i = 0; i <= boardSize; i++) {
       ctx.fillStyle = "black";
       ctx.beginPath();
       ctx.moveTo(0, i * tileSize);
@@ -257,13 +274,14 @@ const BattleCanvas: React.FC<Props> = ({
     game.host,
     game.joiner,
     game.map,
-    game.mode.board_size,
+    boardSize,
     game.last_move,
     getImage,
     handleClick,
     highlightMoves,
     hostUnit,
     isVisible,
+    isHost,
     joinerUnit,
     tileSize,
     visible,
