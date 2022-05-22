@@ -112,7 +112,7 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
     for (let i = 1; i < mode.board_size; i++) {
       ctx.font = "12px serif";
       ctx.fillStyle = "white";
-      ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
+      ctx.fillText(mode.board_size - i + "", 5, i * tileSize + 15);
     }
 
     for (let i = 0; i <= mode.board_size; i++) {

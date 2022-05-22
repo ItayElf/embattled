@@ -80,12 +80,12 @@ export default function UnitEditor() {
       us.push({
         name: "",
         cost: 0,
-        position: [0, 0],
+        position: [army.mode.board_size - 1, army.mode.board_size - 1],
         faction: null,
       });
     setUnits(us);
     setSelectedUnit((v) => (us.length === 1 ? 0 : v - 1));
-  }, [selectedUnit, units]);
+  }, [selectedUnit, units, army.mode.board_size]);
 
   const onAdd = useCallback(() => {
     setUnits((u) => [
@@ -93,12 +93,12 @@ export default function UnitEditor() {
       {
         name: "",
         cost: 0,
-        position: [0, 0],
+        position: [army.mode.board_size - 1, army.mode.board_size - 1],
         faction: null,
       },
     ]);
     setSelectedUnit(units.length);
-  }, [units.length]);
+  }, [units.length, army.mode.board_size]);
 
   if (!user || !unitsData) return <Loading className="h-screen" />;
 
@@ -241,7 +241,7 @@ const UnitDataArea: React.FC<Props> = ({
             }}
           >
             {[...Array(boardSize / 4).keys()].map((i) => (
-              <option value={i + ""} key={i}>
+              <option value={boardSize - i - 1 + ""} key={i}>
                 {i + 1}
               </option>
             ))}

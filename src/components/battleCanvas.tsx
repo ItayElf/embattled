@@ -240,7 +240,7 @@ const BattleCanvas: React.FC<Props> = ({
     for (let i = 1; i < boardSize; i++) {
       ctx.font = "12px serif";
       ctx.fillStyle = "white";
-      ctx.fillText((isHost ? i + 1 : boardSize - i) + "", 5, i * tileSize + 15);
+      ctx.fillText((isHost ? boardSize - i : i + 1) + "", 5, i * tileSize + 15);
     }
 
     if (game.last_move !== null) {
