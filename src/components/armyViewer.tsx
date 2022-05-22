@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArmyUnit } from "../interfaces/army";
 import Mode from "../interfaces/mode";
+import Dirt from "../assets/imgs/tiles/dirt.svg";
 import { getAltColor } from "./battleCanvas";
 
 const CANVAS_SIZE = 816;
@@ -21,7 +22,7 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
 
   useEffect(() => {
     const dirtImage = new Image();
-    dirtImage.src = require("../assets/imgs/tiles/dirt.png");
+    dirtImage.src = Dirt;
     dirtImage.onload = () => {
       setDirt(dirtImage);
     };

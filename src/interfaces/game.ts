@@ -8,6 +8,7 @@ export default interface Game {
   map: string;
   is_host_turn: boolean;
   moved_unit: number | null;
+  last_move: number[][] | null;
   turn_counter: number;
   ended: boolean;
   host_visible: number[][];

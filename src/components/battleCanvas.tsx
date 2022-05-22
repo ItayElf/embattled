@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
 import Player from "../interfaces/player";
+import Dirt from "../assets/imgs/tiles/dirt.svg";
+import Water from "../assets/imgs/tiles/water.svg";
+import Forest from "../assets/imgs/tiles/forest.svg";
 
 const CANVAS_SIZE = 816;
 
@@ -53,6 +56,7 @@ const BattleCanvas: React.FC<Props> = ({
 }) => {
   const [water, setWater] = useState<HTMLImageElement | null>(null);
   const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
+  const [forest, setForest] = useState<HTMLImageElement | null>(null);
   const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
   const [joinerUnit, setJoinerUnit] = useState<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -61,9 +65,10 @@ const BattleCanvas: React.FC<Props> = ({
   const getImage = useCallback(
     (char: string) => {
       if (char === "w") return water;
+      if (char === "f") return forest;
       return dirt;
     },
-    [dirt, water]
+    [dirt, water, forest]
   );
 
   const isVisible = useCallback(
@@ -80,14 +85,19 @@ const BattleCanvas: React.FC<Props> = ({
 
   useEffect(() => {
     const dirtImage = new Image();
-    dirtImage.src = require("../assets/imgs/tiles/dirt.png");
+    dirtImage.src = Dirt;
     dirtImage.onload = () => {
       setDirt(dirtImage);
     };
     const waterImage = new Image();
-    waterImage.src = require("../assets/imgs/tiles/water.png");
+    waterImage.src = Water;
     waterImage.onload = () => {
       setWater(waterImage);
+    };
+    const forestImage = new Image();
+    forestImage.src = Forest;
+    forestImage.onload = () => {
+      setForest(forestImage);
     };
     const hostImage = new Image();
     hostImage.src = require(`../assets/imgs/units/${game.host.faction}.svg`);
@@ -217,6 +227,14 @@ const BattleCanvas: React.FC<Props> = ({
       ctx.fillText(i + 1 + "", 5, i * tileSize + 15);
     }
 
+    if (game.last_move !== null) {
+      game.last_move.forEach((pos) => {
+        if (isVisible(pos)) {
+          drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 0, 0.5)");
+        }
+      });
+    }
+
     drawUnits(ctx, hostUnit, game.host);
     drawUnits(ctx, joinerUnit, game.joiner);
     highlightMoves(ctx);
@@ -240,6 +258,7 @@ const BattleCanvas: React.FC<Props> = ({
     game.joiner,
     game.map,
     game.mode.board_size,
+    game.last_move,
     getImage,
     handleClick,
     highlightMoves,
