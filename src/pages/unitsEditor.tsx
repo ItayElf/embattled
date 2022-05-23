@@ -27,7 +27,7 @@ export default function UnitEditor() {
           {
             name: "",
             cost: 0,
-            position: [0, 0],
+            position: [army.mode.board_size - 1, army.mode.board_size - 1],
             faction: null,
           },
         ]
@@ -141,6 +141,7 @@ export default function UnitEditor() {
             onChangeUnit={onChangeUnit}
             onDelete={onDelete}
             onViewUnit={setSelectedUnitData}
+            faction={getFaction(units)}
             className="w-full"
           />
         </div>
@@ -169,6 +170,7 @@ interface Props {
   onChangeUnit: (unit: ArmyUnit) => void;
   onViewUnit: (unit: UnitData) => void;
   onDelete: () => void;
+  faction: string | null;
 }
 
 const UnitDataArea: React.FC<Props> = ({
@@ -179,6 +181,7 @@ const UnitDataArea: React.FC<Props> = ({
   onChangeUnit,
   onViewUnit,
   onDelete,
+  faction,
 }) => {
   const [selectedName, setSelectedName] = useState(unit.name);
   const [selectedX, setSelectedX] = useState(unit.position[0] + "");
@@ -190,7 +193,13 @@ const UnitDataArea: React.FC<Props> = ({
     setSelectedY(unit.position[1] + "");
   }, [unit]);
 
-  const filteredData = unitsData.filter((u) => u.name.includes(selectedName));
+  const filteredData = unitsData.filter((u) => {
+    let res = u.name.includes(selectedName);
+    if (faction !== "Mercenaries") {
+      res = res && (u.faction === faction || u.faction === null);
+    }
+    return res;
+  });
 
   return (
     <div className={`border border-primary-600 h-min ${className}`}>
