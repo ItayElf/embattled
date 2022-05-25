@@ -29,6 +29,7 @@ export default function UnitEditor() {
             cost: 0,
             position: [army.mode.board_size - 1, army.mode.board_size - 1],
             faction: null,
+            clas: "",
           },
         ]
       : army.units
@@ -82,6 +83,7 @@ export default function UnitEditor() {
         cost: 0,
         position: [army.mode.board_size - 1, army.mode.board_size - 1],
         faction: null,
+        clas: "",
       });
     setUnits(us);
     setSelectedUnit((v) => (us.length === 1 ? 0 : v - 1));
@@ -95,6 +97,7 @@ export default function UnitEditor() {
         cost: 0,
         position: [army.mode.board_size - 1, army.mode.board_size - 1],
         faction: null,
+        clas: "",
       },
     ]);
     setSelectedUnit(units.length);
@@ -301,6 +304,7 @@ const UnitDataArea: React.FC<Props> = ({
                     name: u.name,
                     cost: u.cost,
                     faction: u.faction,
+                    clas: u.clas,
                   });
                 }}
               >

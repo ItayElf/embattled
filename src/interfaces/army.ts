@@ -11,4 +11,5 @@ export interface ArmyUnit {
   position: number[]; // 0 - x, 1 - y
   cost: number;
   faction: string | null;
+  clas: string;
 }

@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { ArmyUnit } from "../interfaces/army";
 import Mode from "../interfaces/mode";
-import Dirt from "../assets/imgs/tiles/dirt.svg";
 import { getAltColor } from "./battleCanvas";
+import { usePlayerUnits, useTiles } from "../hooks/useImages";
 
 const CANVAS_SIZE = 816;
 
@@ -15,44 +15,60 @@ interface Props {
 
 const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
-  const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
-  const [joinerUnit, setJoinerUnit] = useState<HTMLImageElement | null>(null);
+  const [dirt, ,] = useTiles();
+  const [hostInfantry, hostCavalry, hostRanged, hostUtility] =
+    usePlayerUnits(faction);
+  const [joinerInfantry, joinerCavalry, joinerRanged, joinerUtility] =
+    usePlayerUnits(faction + " Alt");
   const tileSize = CANVAS_SIZE / mode.board_size;
 
-  useEffect(() => {
-    const dirtImage = new Image();
-    dirtImage.src = Dirt;
-    dirtImage.onload = () => {
-      setDirt(dirtImage);
-    };
-    const hostImage = new Image();
-    hostImage.src = require(`../assets/imgs/units/${faction}.svg`);
-    hostImage.onload = () => {
-      setHostUnit(hostImage);
-    };
-    const joinerImage = new Image();
-    joinerImage.src = require(`../assets/imgs/units/${faction} Alt.svg`);
-    joinerImage.onload = () => {
-      setJoinerUnit(joinerImage);
-    };
-  }, [faction, mode.board_size, tileSize]);
+  const getUnitImage = useCallback(
+    (unitClass: string, isHost: boolean) => {
+      const splt = unitClass.split(" ");
+      const val = splt[splt.length - 1];
+      if (isHost) {
+        if (val === "Infantry") return hostInfantry;
+        else if (val === "Cavalry") return hostCavalry;
+        else if (val === "Ranged") return hostRanged;
+        else if (val === "Utility") return hostUtility;
+      } else {
+        if (val === "Infantry") return joinerInfantry;
+        else if (val === "Cavalry") return joinerCavalry;
+        else if (val === "Ranged") return joinerRanged;
+        else if (val === "Utility") return joinerUtility;
+      }
+      throw Error("Invalid unit class: " + unitClass);
+    },
+    [
+      hostCavalry,
+      hostInfantry,
+      hostRanged,
+      hostUtility,
+      joinerCavalry,
+      joinerInfantry,
+      joinerRanged,
+      joinerUtility,
+    ]
+  );
 
   const drawUnits = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      if (!hostUnit || !joinerUnit) return;
       units.forEach((u, i) => {
         const height = tileSize - 2;
-        const width = (hostUnit.width * height) / hostUnit.height;
+        const unitImage = getUnitImage(u.clas, true);
+        if (!unitImage) return;
+        const width = (unitImage.width * height) / unitImage.height;
         ctx.drawImage(
-          hostUnit,
+          unitImage,
           u.position[0] * tileSize + (tileSize / 2 - width / 2),
           u.position[1] * tileSize + (tileSize / 2 - height / 2),
           width,
           height
         );
+        const joinerImage = getUnitImage(u.clas, false);
+        if (!joinerImage) return;
         ctx.drawImage(
-          joinerUnit,
+          joinerImage,
           (mode.board_size - u.position[0] - 1) * tileSize +
             (tileSize / 2 - width / 2),
           (mode.board_size - u.position[1] - 1) * tileSize +
@@ -78,11 +94,11 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
         );
       });
     },
-    [tileSize, faction, hostUnit, joinerUnit, units, mode.board_size]
+    [tileSize, faction, units, mode.board_size, getUnitImage]
   );
 
   useEffect(() => {
-    if (!dirt || !hostUnit || !joinerUnit) return;
+    if (!dirt) return;
     const canv = canvasRef.current;
     if (!canv) return;
     const ctx = canv.getContext("2d");
@@ -138,7 +154,7 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
     ctx.moveTo(0, ((mode.board_size * 3) / 4) * tileSize);
     ctx.lineTo(CANVAS_SIZE, ((mode.board_size * 3) / 4) * tileSize);
     ctx.stroke();
-  }, [dirt, hostUnit, joinerUnit, mode.board_size, tileSize, drawUnits]);
+  }, [dirt, mode.board_size, tileSize, drawUnits]);
 
   return (
     <canvas
