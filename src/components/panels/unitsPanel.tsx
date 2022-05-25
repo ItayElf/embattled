@@ -101,7 +101,7 @@ const UnitsPanel: React.FC<Props> = ({
                   ? selectedUnit.attributes.map((a, i) => (
                       <div key={i}>
                         <Tooltip title={a.description}>
-                          <p className="underline">
+                          <p className="underline w-max">
                             {a.name}
                             {i !== selectedUnit.attributes.length - 1 && ", "}
                           </p>

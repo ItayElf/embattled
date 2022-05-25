@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
 import Player from "../interfaces/player";
-import Dirt from "../assets/imgs/tiles/dirt.svg";
-import Water from "../assets/imgs/tiles/water.svg";
-import Forest from "../assets/imgs/tiles/forest.svg";
+import { usePlayerUnits, useTiles } from "../hooks/useImages";
 
 const CANVAS_SIZE = 816;
 
@@ -54,11 +52,12 @@ const BattleCanvas: React.FC<Props> = ({
   onAttack,
   isHost,
 }) => {
-  const [water, setWater] = useState<HTMLImageElement | null>(null);
-  const [dirt, setDirt] = useState<HTMLImageElement | null>(null);
-  const [forest, setForest] = useState<HTMLImageElement | null>(null);
-  const [hostUnit, setHostUnit] = useState<HTMLImageElement | null>(null);
-  const [joinerUnit, setJoinerUnit] = useState<HTMLImageElement | null>(null);
+  const [dirt, water, forest] = useTiles();
+  const [hostInfantry, hostCavalry, hostRanged, hostUtility] = usePlayerUnits(
+    game.host.faction
+  );
+  const [joinerInfantry, joinerCavalry, joinerRanged, joinerUtility] =
+    usePlayerUnits(game.joiner.faction);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tileSize = CANVAS_SIZE / game.mode.board_size;
   const boardSize = game.mode.board_size;
@@ -83,34 +82,6 @@ const BattleCanvas: React.FC<Props> = ({
     },
     [visible]
   );
-
-  useEffect(() => {
-    const dirtImage = new Image();
-    dirtImage.src = Dirt;
-    dirtImage.onload = () => {
-      setDirt(dirtImage);
-    };
-    const waterImage = new Image();
-    waterImage.src = Water;
-    waterImage.onload = () => {
-      setWater(waterImage);
-    };
-    const forestImage = new Image();
-    forestImage.src = Forest;
-    forestImage.onload = () => {
-      setForest(forestImage);
-    };
-    const hostImage = new Image();
-    hostImage.src = require(`../assets/imgs/units/${game.host.faction}.svg`);
-    hostImage.onload = () => {
-      setHostUnit(hostImage);
-    };
-    const joinerImage = new Image();
-    joinerImage.src = require(`../assets/imgs/units/${game.joiner.faction}.svg`);
-    joinerImage.onload = () => {
-      setJoinerUnit(joinerImage);
-    };
-  }, [game.host.faction, game.joiner.faction]);
 
   const handleClick = useCallback(
     (canvas: HTMLCanvasElement, e: MouseEvent) => {
@@ -138,11 +109,42 @@ const BattleCanvas: React.FC<Props> = ({
     ]
   );
 
+  const getUnitImage = useCallback(
+    (unitClass: string, isHost: boolean) => {
+      const splt = unitClass.split(" ");
+      const val = splt[splt.length - 1];
+      if (isHost) {
+        if (val === "Infantry") return hostInfantry;
+        else if (val === "Cavalry") return hostCavalry;
+        else if (val === "Ranged") return hostRanged;
+        else if (val === "Utility") return hostUtility;
+      } else {
+        if (val === "Infantry") return joinerInfantry;
+        else if (val === "Cavalry") return joinerCavalry;
+        else if (val === "Ranged") return joinerRanged;
+        else if (val === "Utility") return joinerUtility;
+      }
+      throw Error("Invalid unit class: " + unitClass);
+    },
+    [
+      hostCavalry,
+      hostInfantry,
+      hostRanged,
+      hostUtility,
+      joinerCavalry,
+      joinerInfantry,
+      joinerRanged,
+      joinerUtility,
+    ]
+  );
+
   const drawUnits = useCallback(
-    (ctx: CanvasRenderingContext2D, unit: HTMLImageElement, player: Player) => {
+    (ctx: CanvasRenderingContext2D, player: Player, isOwnerHost: boolean) => {
       Object.keys(player.army).forEach((i) => {
         const u = player.army[parseInt(i)];
         if (!isVisible(u.position)) return;
+        const unit = getUnitImage(u.clas, isOwnerHost);
+        if (unit === null) return;
         const height = tileSize - 2;
         const width = (unit.width * height) / unit.height;
 
@@ -158,7 +160,7 @@ const BattleCanvas: React.FC<Props> = ({
         );
 
         ctx.fillStyle = getAltColor(player.faction);
-        ctx.font = "20px serif";
+        ctx.font = i.length < 2 ? "20px serif" : "15px serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(
@@ -168,7 +170,7 @@ const BattleCanvas: React.FC<Props> = ({
         );
       });
     },
-    [tileSize, isVisible, boardSize, isHost]
+    [tileSize, isVisible, boardSize, getUnitImage, isHost]
   );
 
   const drawSquare = useCallback(
@@ -200,7 +202,7 @@ const BattleCanvas: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    if (!dirt || !water || !hostUnit || !joinerUnit) return;
+    if (!dirt || !water) return;
     const canv = canvasRef.current;
     if (!canv) return;
     const ctx = canv.getContext("2d");
@@ -247,13 +249,13 @@ const BattleCanvas: React.FC<Props> = ({
       game.last_move.forEach((pos) => {
         console.log(pos);
         if (isVisible(pos)) {
-          drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 0, 0.5)");
+          drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 255, 0.4)");
         }
       });
     }
 
-    drawUnits(ctx, hostUnit, game.host);
-    drawUnits(ctx, joinerUnit, game.joiner);
+    drawUnits(ctx, game.host, true);
+    drawUnits(ctx, game.joiner, false);
     highlightMoves(ctx);
 
     for (let i = 0; i <= boardSize; i++) {
@@ -279,10 +281,8 @@ const BattleCanvas: React.FC<Props> = ({
     getImage,
     handleClick,
     highlightMoves,
-    hostUnit,
     isVisible,
     isHost,
-    joinerUnit,
     tileSize,
     visible,
     water,
