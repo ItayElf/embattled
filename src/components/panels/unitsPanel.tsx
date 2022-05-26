@@ -26,7 +26,7 @@ const UnitsPanel: React.FC<Props> = ({
     return (
       <>
         <PrimaryButton
-          className="s2 absolute"
+          className="caption lg:s2 absolute"
           onClick={() => {
             setSelectedUnit(null);
             setIndex(-1);
@@ -34,13 +34,13 @@ const UnitsPanel: React.FC<Props> = ({
         >
           Back
         </PrimaryButton>
-        <h5 className="h5 text-center mb-4 font-bold">
+        <h5 className="s1 lg:h5 text-center mb-4 font-bold">
           {selectedUnit.name} - {selectedUnit.clas} (#{index})
         </h5>
         <div>
           <div className="flex space-x-4">
             <div className="w-full">
-              <p className="h6 text-center">
+              <p className="s1 lg:h6 text-center">
                 Unit Size ({selectedUnit.unit_size}/{selectedUnit.unit_size_max}
                 )
               </p>
@@ -51,7 +51,7 @@ const UnitsPanel: React.FC<Props> = ({
               />
             </div>
             <div className="w-full">
-              <p className="h6 text-center">
+              <p className="s1 lg:h6 text-center">
                 Morale ({isOwner ? selectedUnit.morale : "??"}/
                 {selectedUnit.morale_max})
               </p>
@@ -65,7 +65,7 @@ const UnitsPanel: React.FC<Props> = ({
             </div>
             {selectedUnit.ammunition !== null && selectedUnit.ammunition_max && (
               <div className="w-full">
-                <p className="h6 text-center">
+                <p className="s1 lg:h6 text-center">
                   Ammo ({selectedUnit.ammunition}/{selectedUnit.ammunition_max})
                 </p>
                 <ProgressBar
@@ -78,23 +78,23 @@ const UnitsPanel: React.FC<Props> = ({
           </div>
           <div className="flex space-x-4">
             <div className="flex space-x-4 justify-between w-1/2 mt-2">
-              <div className="s1 space-y-2">
+              <div className="caption lg:s1 lg:space-y-2">
                 <p>Speed: {selectedUnit.speed}</p>
                 <p>Armor: {selectedUnit.armor}</p>
                 <p>Defense: {selectedUnit.defense}</p>
               </div>
-              <div className="s1 space-y-2">
+              <div className="caption lg:s1 lg:space-y-2">
                 <p>Attack: {selectedUnit.melee_attack}</p>
                 <p>Damage: {selectedUnit.melee_damage}</p>
                 <p>Charge: +{selectedUnit.charge_bonus}%</p>
               </div>
-              <div className="s1 space-y-2">
+              <div className="caption lg:s1 lg:space-y-2">
                 <p>Range: {selectedUnit.range ?? "N/A"}</p>
                 <p>R.Attack: {selectedUnit.ranged_attack ?? "N/A"}</p>
                 <p>R.Damage: {selectedUnit.ranged_damage ?? "N/A"}</p>
               </div>
             </div>
-            <div className="w-1/2 space-y-2 s1 mt-2">
+            <div className="w-1/2 lg:pl-0 pl-2 lg:space-y-2 caption lg:s1 mt-2">
               <div className="flex space-x-1">
                 <p>Attributes: </p>
                 {selectedUnit.attributes.length !== 0
@@ -130,18 +130,18 @@ const UnitsPanel: React.FC<Props> = ({
   );
   return (
     <>
-      <PrimaryButton className="s2 absolute" onClick={onBack}>
+      <PrimaryButton className="caption lg:s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
-      <h5 className="h5 text-center font-bold">
+      <h5 className="s1 lg:h5 text-center font-bold">
         {isOwner ? "Your" : "Opponent's"} Army ({relative}/{originalValue}{" "}
         points)
       </h5>
-      <div className="grid grid-cols-4 gap-4 mt-2">
+      <div className="grid grid-cols-4 gap-4 mt-4 lg:mt-2">
         {Object.keys(units).map((i) => (
           <PrimaryButton
             key={i}
-            className="s1"
+            className="caption lg:s1"
             onClick={() => {
               setSelectedUnit(units[parseInt(i)]);
               setIndex(parseInt(i));

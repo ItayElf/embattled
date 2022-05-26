@@ -78,7 +78,7 @@
     @apply font-[ptsans] text-[15px] uppercase tracking-[1.25px];
   }
   .caption {
-    @apply font-[ptsans] text-[13px] tracking-[0.4px];
+    @apply font-[ptserif] text-[13px] tracking-[0.4px];
   }
   .overline {
     @apply font-[ptsans] text-[11px] uppercase tracking-[1.5px];

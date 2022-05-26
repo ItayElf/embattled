@@ -28,13 +28,13 @@ const ActionPanel: React.FC<Props> = ({
   const yourTurn =
     (isHost && game.is_host_turn) || (!isHost && !game.is_host_turn);
   return (
-    <div className={`bg-secondary-dark px-4 ${className}`}>
-      <h1 className="h5 text-center">
+    <div className={`bg-secondary-dark px-4 overflow-auto ${className}`}>
+      <h1 className="s1 lg:h5 text-center">
         {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
         {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
       </h1>
       <div className="h-px bg-primary-100" />
-      <p className="text-center h6">
+      <p className="s2 text-center lg:h6">
         {game.ended ? "Game Ended" : yourTurn ? "Your Turn" : "Opponent's Turn"}
       </p>
       <div className="h-px bg-primary-100" />
@@ -129,29 +129,29 @@ const Actions: React.FC<ActionProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-3 gap-4">
-      <PrimaryButton className="h6" onClick={() => setScreen("units")}>
+      <PrimaryButton className="s2 lg:h6" onClick={() => setScreen("units")}>
         Units
       </PrimaryButton>
-      <PrimaryButton className="h6" onClick={() => setScreen("oppunits")}>
+      <PrimaryButton className="s2 lg:h6" onClick={() => setScreen("oppunits")}>
         Opp. Units
       </PrimaryButton>
       {yourTurn && !ended ? (
         <>
           <PrimaryButton
             disabled={moved}
-            className="h6"
+            className="s2 lg:h6"
             onClick={() => setScreen("move")}
           >
             Move Unit
           </PrimaryButton>
           <PrimaryButton
-            className="h6"
+            className="s2 lg:h6"
             onClick={() => (moved ? onRequestAttack() : setScreen("attack"))}
           >
             Attack
           </PrimaryButton>
           <PrimaryButton
-            className="h6"
+            className="s2 lg:h6"
             onClick={() => (moved ? onRequestHalt() : setScreen("halt"))}
           >
             {moved ? "Pass Round" : "Halt"}

@@ -21,7 +21,7 @@ const LogArea: React.FC<Props> = ({ messages, className }) => {
     <div
       className={`bg-secondary-dark border-l-[16px] flex flex-col border-primary-600 ${className}`}
     >
-      <div className="bg-primary-600 shadow-sm h5 pl-9 py-1 text-white">
+      <div className="bg-primary-600 shadow-sm s1 lg:h5 pl-9 py-1 text-white">
         Logs
       </div>
       <div className="flex-1 pl-4 space-y-3 overflow-auto pr-2 scrollbar scrollbar-thumb-primary-900 scrollbar-track-primary-100">
@@ -47,13 +47,13 @@ const LogTile: React.FC<LogProps> = ({ message }) => {
   if (message.type === "log") {
     return (
       <div
-        className="b1"
+        className="caption lg:b1"
         dangerouslySetInnerHTML={{ __html: message.content }}
       />
     );
   } else if (message.type === "turn") {
     return (
-      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mb-2 py-4">
+      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mb-2 py-2 lg:py-4">
         Turn {message.turn}
       </div>
     );

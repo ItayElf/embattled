@@ -20,18 +20,18 @@ const HandleActionPanel: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <PrimaryButton className="s2 absolute" onClick={onBack}>
+      <PrimaryButton className="caption lg:s2 absolute" onClick={onBack}>
         Back
       </PrimaryButton>
-      <h5 className="h5 text-center font-bold">{title}</h5>
-      <div className="grid grid-cols-4 gap-4 mt-2">
+      <h5 className="s1 lg:h5 text-center font-bold">{title}</h5>
+      <div className="grid grid-cols-4 gap-4 mt-4 lg:mt-2">
         {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => {
           const unit = units[parseInt(i)];
           return (
             (!unit.activated || movedUnit) && (
               <PrimaryButton
                 key={i}
-                className="s1"
+                className="caption lg:s1"
                 onClick={() => {
                   onRequestAction(parseInt(i));
                   onBack();

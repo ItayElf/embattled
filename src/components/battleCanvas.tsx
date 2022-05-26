@@ -4,8 +4,6 @@ import Game from "../interfaces/game";
 import Player from "../interfaces/player";
 import { usePlayerUnits, useTiles } from "../hooks/useImages";
 
-const CANVAS_SIZE = 816;
-
 interface Props {
   game: Game;
   moveSquares: number[][] | null;
@@ -59,6 +57,7 @@ const BattleCanvas: React.FC<Props> = ({
   const [joinerInfantry, joinerCavalry, joinerRanged, joinerUtility] =
     usePlayerUnits(game.joiner.faction);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const CANVAS_SIZE = window.innerHeight < 816 ? 576 : 816;
   const tileSize = CANVAS_SIZE / game.mode.board_size;
   const boardSize = game.mode.board_size;
 
@@ -286,6 +285,7 @@ const BattleCanvas: React.FC<Props> = ({
     tileSize,
     visible,
     water,
+    CANVAS_SIZE,
   ]);
 
   return (
@@ -293,7 +293,7 @@ const BattleCanvas: React.FC<Props> = ({
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className="w-[816px] h-[816px]"
+      className="w-[576px] h-[576px] lg:w-[816px] lg:h-[816px]"
     />
   );
 };
