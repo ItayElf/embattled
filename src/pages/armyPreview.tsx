@@ -61,12 +61,12 @@ export default function ArmyPreview() {
             value={selectedName}
             setValue={setSelectedName}
             label="Army Name"
-            className="text-[64px]"
+            className="text-[32px] lg:text-[64px]"
             wrapperClassName="mb-4 w-full"
           />
           <div className="flex space-x-4 w-full">
             <select
-              className="w-1/2 rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              className="w-1/2 rounded border-none s1 lg:h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
               value={selectedMode}
               onChange={(e) => setSelectedMode(e.target.value)}
               required
@@ -81,7 +81,7 @@ export default function ArmyPreview() {
               ))}
             </select>
             <PrimaryButton
-              className="h6 w-1/4"
+              className="s2 lg:h6 w-1/4"
               disabled={
                 selectedMode === army.mode.id + "" &&
                 (selectedName === army.name || !selectedName)
@@ -97,15 +97,15 @@ export default function ArmyPreview() {
               Save Changes
             </PrimaryButton>
             <Link to={`/armyunits/${army.name}`} className="w-1/4">
-              <PrimaryButton className="h6 w-full h-full">
+              <PrimaryButton className="s2 lg:h6 w-full h-full">
                 Edit Units
               </PrimaryButton>
             </Link>
           </div>
-          <h4 className="h4 mt-8">Units</h4>
+          <h4 className="h6 lg:h4 mt-8">Units</h4>
           <table className="w-full">
             <thead>
-              <tr className="bg-primary-600 h6 text-white">
+              <tr className="bg-primary-600 s2 lg:h6 text-white">
                 <td className="py-2 pl-6">Name</td>
                 <td className="py-2">Position</td>
                 <td className="py-2">Faction</td>
@@ -116,7 +116,7 @@ export default function ArmyPreview() {
               {army.units.map((u, i) => (
                 <tr
                   key={i}
-                  className={`h6 ${
+                  className={`s2 lg:h6 ${
                     i % 2 === 0 ? "bg-primary-50" : "bg-primary-100"
                   }`}
                 >

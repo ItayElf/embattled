@@ -4,8 +4,6 @@ import Mode from "../interfaces/mode";
 import { getAltColor } from "./battleCanvas";
 import { usePlayerUnits, useTiles } from "../hooks/useImages";
 
-const CANVAS_SIZE = 816;
-
 interface Props {
   mode: Mode;
   faction: string;
@@ -15,6 +13,7 @@ interface Props {
 
 const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const CANVAS_SIZE = window.innerHeight < 816 ? 576 : 816;
   const [dirt, ,] = useTiles();
   const [hostInfantry, hostCavalry, hostRanged, hostUtility] =
     usePlayerUnits(faction);
@@ -154,14 +153,14 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
     ctx.moveTo(0, ((mode.board_size * 3) / 4) * tileSize);
     ctx.lineTo(CANVAS_SIZE, ((mode.board_size * 3) / 4) * tileSize);
     ctx.stroke();
-  }, [dirt, mode.board_size, tileSize, drawUnits]);
+  }, [dirt, mode.board_size, tileSize, drawUnits, CANVAS_SIZE]);
 
   return (
     <canvas
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className={`w-[816px] h-[816px] ${className}`}
+      className={`w-[576px] h-[576px] lg:w-[816px] lg:h-[816px] ${className}`}
     />
   );
 };

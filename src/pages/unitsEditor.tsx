@@ -114,7 +114,7 @@ export default function UnitEditor() {
             <div className="w-24 rounded-l overflow-hidden divide-y divide-primary-900">
               {units.map((u, i) => (
                 <PrimaryButton
-                  className={`s2 w-24 rounded-none px-3 py-5 disabled:bg-primary-400`}
+                  className={`caption lg:s2 w-24 rounded-none px-3 py-5 disabled:bg-primary-400`}
                   key={i}
                   onClick={() => setSelectedUnit(i)}
                   disabled={i === selectedUnit}
@@ -123,14 +123,14 @@ export default function UnitEditor() {
                 </PrimaryButton>
               ))}
               <PrimaryButton
-                className="h6 w-24 rounded-none px-3 py-5"
+                className="s2 lg:h6 w-24 rounded-none px-3 py-5"
                 onClick={onAdd}
               >
                 +
               </PrimaryButton>
             </div>
             <PrimaryButton
-              className="s1 mt-4"
+              className="caption lg:s1 mt-4"
               onClick={save}
               disabled={filteredUnits.length === 0}
             >
@@ -219,13 +219,13 @@ const UnitDataArea: React.FC<Props> = ({
             className="bg-white"
             wrapperClassName="w-full"
           />
-          <PrimaryButton className="h5" onClick={onDelete}>
+          <PrimaryButton className="s1 lg:h5" onClick={onDelete}>
             Delete
           </PrimaryButton>
         </div>
         <div className="flex justify-between space-x-4">
           <select
-            className=" rounded border-none h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+            className=" rounded border-none s1 lg:h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
             value={selectedX}
             onChange={(e) => {
               setSelectedX(e.target.value);
@@ -242,7 +242,7 @@ const UnitDataArea: React.FC<Props> = ({
             ))}
           </select>
           <select
-            className=" rounded border-none h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+            className="rounded border-none s1 lg:h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
             value={selectedY}
             onChange={(e) => {
               setSelectedY(e.target.value);
@@ -278,7 +278,7 @@ const UnitDataArea: React.FC<Props> = ({
       </div>
       <table className="w-full">
         <thead>
-          <tr className="bg-primary-600 s1 text-white">
+          <tr className="bg-primary-600 caption lg:s1 text-white">
             <td className="py-2 pl-6">Name</td>
             <td className="py-2">Faction</td>
             <td className="py-2">Class</td>
@@ -291,7 +291,7 @@ const UnitDataArea: React.FC<Props> = ({
           {filteredData.map((u, i) => (
             <tr
               key={i}
-              className={`s1 ${
+              className={`caption lg:s1 ${
                 i % 2 === 0 ? "bg-primary-50" : "bg-primary-100"
               }`}
             >

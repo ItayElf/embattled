@@ -80,13 +80,13 @@ export default function ArmybuilderHome() {
     <>
       <Header user={user} />
       <div className="flex flex-col mt-24 px-24 justify-center items-center">
-        <h1 className="h2">All Armies</h1>
-        <PrimaryButton className="w-72" onClick={onNewArmy}>
+        <h1 className="h4 lg:h2">All Armies</h1>
+        <PrimaryButton className="w-72 h6 lg:h4" onClick={onNewArmy}>
           + New Army
         </PrimaryButton>
         <table className="w-full mt-4">
           <thead>
-            <tr className="bg-primary-600 h6 text-white">
+            <tr className="bg-primary-600 s1 lg:h6 text-white">
               <td className="py-2 pl-6">Name</td>
               <td className="py-2">Mode</td>
               <td className="py-2">Worth</td>
@@ -98,7 +98,7 @@ export default function ArmybuilderHome() {
             {armies.map((a, i) => (
               <tr
                 key={i}
-                className={`h6 ${
+                className={`s2 lg:h6 ${
                   i % 2 === 0 ? "bg-primary-50" : "bg-primary-100"
                 }`}
               >
@@ -108,21 +108,26 @@ export default function ArmybuilderHome() {
                 </td>
                 <td className="py-2">{getPoints(a)} Points</td>
                 <td className="py-2">{getFaction(a.units)}</td>
-                <td className="py-2 flex space-x-2 max-w-[230px]">
-                  <PrimaryButton onClick={() => validate(a)} className="s2">
+                <td className="py-2 flex space-x-2 max-w-[280px] lg:max-w-[230px]">
+                  <PrimaryButton
+                    onClick={() => validate(a)}
+                    className="caption lg:s2"
+                  >
                     Validate
                   </PrimaryButton>
                   <Link to={`/army/${a.name}`}>
-                    <PrimaryButton className="s2">Edit</PrimaryButton>
+                    <PrimaryButton className="caption lg:s2">
+                      Edit
+                    </PrimaryButton>
                   </Link>
                   <PrimaryButton
-                    className="s2"
+                    className="caption lg:s2"
                     onClick={() => onDelete(a.name)}
                   >
                     Delete
                   </PrimaryButton>
                   <PrimaryButton
-                    className="s2"
+                    className="caption lg:s2"
                     onClick={() => setExportedArmy(a)}
                   >
                     Import/Export
