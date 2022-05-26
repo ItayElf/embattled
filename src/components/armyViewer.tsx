@@ -160,7 +160,7 @@ const ArmyViewer: React.FC<Props> = ({ mode, faction, className, units }) => {
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className={`w-[576px] h-[576px] lg:w-[816px] lg:h-[816px] ${className}`}
+      className={`h-[576px] w-[576px] lg:h-[816px] lg:w-[816px] ${className}`}
     />
   );
 };

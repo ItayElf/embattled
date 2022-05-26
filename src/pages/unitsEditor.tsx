@@ -108,10 +108,10 @@ export default function UnitEditor() {
   return (
     <>
       <Header user={user} />
-      <div className="flex mt-24 px-6">
-        <div className="w-full flex">
+      <div className="mt-24 flex px-6">
+        <div className="flex w-full">
           <div className="w-24">
-            <div className="w-24 rounded-l overflow-hidden divide-y divide-primary-900">
+            <div className="w-24 divide-y divide-primary-900 overflow-hidden rounded-l">
               {units.map((u, i) => (
                 <PrimaryButton
                   className={`caption lg:s2 w-24 rounded-none px-3 py-5 disabled:bg-primary-400`}
@@ -205,8 +205,8 @@ const UnitDataArea: React.FC<Props> = ({
   });
 
   return (
-    <div className={`border border-primary-600 h-min ${className}`}>
-      <div className={`bg-primary-50 py-6 px-4 space-y-3`}>
+    <div className={`h-min border border-primary-600 ${className}`}>
+      <div className={`space-y-3 bg-primary-50 py-6 px-4`}>
         <div className="flex space-x-2">
           <TextField
             type="text"
@@ -225,7 +225,7 @@ const UnitDataArea: React.FC<Props> = ({
         </div>
         <div className="flex justify-between space-x-4">
           <select
-            className=" rounded border-none s1 lg:h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+            className=" s1 lg:h5 rounded border-none bg-white py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
             value={selectedX}
             onChange={(e) => {
               setSelectedX(e.target.value);
@@ -242,7 +242,7 @@ const UnitDataArea: React.FC<Props> = ({
             ))}
           </select>
           <select
-            className="rounded border-none s1 lg:h5 bg-white focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+            className="s1 lg:h5 rounded border-none bg-white py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
             value={selectedY}
             onChange={(e) => {
               setSelectedY(e.target.value);
@@ -278,7 +278,7 @@ const UnitDataArea: React.FC<Props> = ({
       </div>
       <table className="w-full">
         <thead>
-          <tr className="bg-primary-600 caption lg:s1 text-white">
+          <tr className="caption lg:s1 bg-primary-600 text-white">
             <td className="py-2 pl-6">Name</td>
             <td className="py-2">Faction</td>
             <td className="py-2">Class</td>
@@ -296,7 +296,7 @@ const UnitDataArea: React.FC<Props> = ({
               }`}
             >
               <td
-                className="py-2 pl-6 cursor-pointer"
+                className="cursor-pointer py-2 pl-6"
                 onClick={() => {
                   setSelectedName(u.name);
                   onChangeUnit({
@@ -320,7 +320,7 @@ const UnitDataArea: React.FC<Props> = ({
               <td className="py-2">{u.cost}</td>
               <td className="py-2">{u.range === null ? "No" : "Yes"}</td>
               <td
-                className="py-2 text-primary-900 underline cursor-pointer"
+                className="cursor-pointer py-2 text-primary-900 underline"
                 onClick={() => onViewUnit(u)}
               >
                 View

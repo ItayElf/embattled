@@ -24,7 +24,7 @@ const HandleActionPanel: React.FC<Props> = ({
         Back
       </PrimaryButton>
       <h5 className="s1 lg:h5 text-center font-bold">{title}</h5>
-      <div className="grid grid-cols-4 gap-4 mt-4 lg:mt-2">
+      <div className="mt-4 grid grid-cols-4 gap-4 lg:mt-2">
         {(movedUnit ? [movedUnit + ""] : Object.keys(units)).map((i) => {
           const unit = units[parseInt(i)];
           return (

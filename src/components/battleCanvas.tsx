@@ -293,7 +293,7 @@ const BattleCanvas: React.FC<Props> = ({
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className="w-[576px] h-[576px] lg:w-[816px] lg:h-[816px]"
+      className="h-[576px] w-[576px] lg:h-[816px] lg:w-[816px]"
     />
   );
 };

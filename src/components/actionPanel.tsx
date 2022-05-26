@@ -28,13 +28,13 @@ const ActionPanel: React.FC<Props> = ({
   const yourTurn =
     (isHost && game.is_host_turn) || (!isHost && !game.is_host_turn);
   return (
-    <div className={`bg-secondary-dark px-4 overflow-auto ${className}`}>
+    <div className={`overflow-auto bg-secondary-dark px-4 ${className}`}>
       <h1 className="s1 lg:h5 text-center">
         {game.mode.name} Game, {game.mode.points}P - {game.host.name} (
         {game.host.rating}) VS {game.joiner.name} ({game.joiner.rating})
       </h1>
       <div className="h-px bg-primary-100" />
-      <p className="s2 text-center lg:h6">
+      <p className="s2 lg:h6 text-center">
         {game.ended ? "Game Ended" : yourTurn ? "Your Turn" : "Opponent's Turn"}
       </p>
       <div className="h-px bg-primary-100" />

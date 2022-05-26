@@ -8,7 +8,7 @@ const ProgressBar: React.FC<Props> = ({ max, current, className }) => {
   return (
     <div className={`border border-primary-600 bg-primary-200 ${className}`}>
       <div
-        className="bg-primary-600 h-full"
+        className="h-full bg-primary-600"
         style={{ width: `${(current * 100) / max}%` }}
       />
     </div>

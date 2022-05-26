@@ -95,7 +95,7 @@ export default function Rooms() {
         <div className="w-2/3 pl-9">
           <table className="w-full">
             <thead>
-              <tr className="bg-primary-600 h6 text-white">
+              <tr className="h6 bg-primary-600 text-white">
                 <td className="py-2 pl-6">Name</td>
                 <td className="py-2">Mode</td>
                 <td className="py-2">Host</td>
@@ -121,7 +121,7 @@ export default function Rooms() {
                         onClick={() => {
                           setJoinRoom(r);
                         }}
-                        className="h6 pt-1 w-full -mx-5"
+                        className="h6 -mx-5 w-full pt-1"
                       >
                         Join
                       </PrimaryButton>
@@ -132,7 +132,7 @@ export default function Rooms() {
             </tbody>
           </table>
         </div>
-        <div className="w-1/3 flex pr-16 flex-col">
+        <div className="flex w-1/3 flex-col pr-16">
           <PrimaryButton className="w-full py-3" onClick={() => refresh()}>
             Refresh
           </PrimaryButton>
@@ -146,7 +146,7 @@ export default function Rooms() {
               required
             />
             <select
-              className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              className="h5 w-full rounded border-none bg-primary-50 py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
               value={mode}
               onChange={(e) => setMode(e.target.value)}
               required
@@ -161,7 +161,7 @@ export default function Rooms() {
               ))}
             </select>
             <select
-              className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              className="h5 w-full rounded border-none bg-primary-50 py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
               value={selectedArmyName}
               onChange={(e) => setSelectedArmyName(e.target.value)}
               disabled={!mode}

@@ -16,7 +16,7 @@ const MovePanel: React.FC<Props> = ({ units, onBack, onRequestMove }) => {
         Back
       </PrimaryButton>
       <h5 className="s1 lg:h5 text-center font-bold">Move Unit</h5>
-      <div className="grid grid-cols-4 gap-4 mt-4 lg:mt-2">
+      <div className="mt-4 grid grid-cols-4 gap-4 lg:mt-2">
         {Object.keys(units).map((i) => {
           const unit = units[parseInt(i)];
           return (

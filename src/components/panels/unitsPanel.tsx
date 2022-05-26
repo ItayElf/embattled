@@ -34,7 +34,7 @@ const UnitsPanel: React.FC<Props> = ({
         >
           Back
         </PrimaryButton>
-        <h5 className="s1 lg:h5 text-center mb-4 font-bold">
+        <h5 className="s1 lg:h5 mb-4 text-center font-bold">
           {selectedUnit.name} - {selectedUnit.clas} (#{index})
         </h5>
         <div>
@@ -47,7 +47,7 @@ const UnitsPanel: React.FC<Props> = ({
               <ProgressBar
                 max={selectedUnit.unit_size_max}
                 current={selectedUnit.unit_size}
-                className="w-full h-6"
+                className="h-6 w-full"
               />
             </div>
             <div className="w-full">
@@ -60,7 +60,7 @@ const UnitsPanel: React.FC<Props> = ({
                 current={
                   isOwner ? selectedUnit.morale : selectedUnit.morale_max
                 }
-                className="w-full h-6"
+                className="h-6 w-full"
               />
             </div>
             {selectedUnit.ammunition !== null && selectedUnit.ammunition_max && (
@@ -71,13 +71,13 @@ const UnitsPanel: React.FC<Props> = ({
                 <ProgressBar
                   max={selectedUnit.ammunition_max}
                   current={selectedUnit.ammunition}
-                  className="w-full h-6"
+                  className="h-6 w-full"
                 />
               </div>
             )}
           </div>
           <div className="flex space-x-4">
-            <div className="flex space-x-4 justify-between w-1/2 mt-2">
+            <div className="mt-2 flex w-1/2 justify-between space-x-4">
               <div className="caption lg:s1 lg:space-y-2">
                 <p>Speed: {selectedUnit.speed}</p>
                 <p>Armor: {selectedUnit.armor}</p>
@@ -94,14 +94,14 @@ const UnitsPanel: React.FC<Props> = ({
                 <p>R.Damage: {selectedUnit.ranged_damage ?? "N/A"}</p>
               </div>
             </div>
-            <div className="w-1/2 lg:pl-0 pl-2 lg:space-y-2 caption lg:s1 mt-2">
+            <div className="caption lg:s1 mt-2 w-1/2 pl-2 lg:space-y-2 lg:pl-0">
               <div className="flex space-x-1">
                 <p>Attributes: </p>
                 {selectedUnit.attributes.length !== 0
                   ? selectedUnit.attributes.map((a, i) => (
                       <div key={i}>
                         <Tooltip title={a.description}>
-                          <p className="underline w-max">
+                          <p className="w-max underline">
                             {a.name}
                             {i !== selectedUnit.attributes.length - 1 && ", "}
                           </p>
@@ -137,7 +137,7 @@ const UnitsPanel: React.FC<Props> = ({
         {isOwner ? "Your" : "Opponent's"} Army ({relative}/{originalValue}{" "}
         points)
       </h5>
-      <div className="grid grid-cols-4 gap-4 mt-4 lg:mt-2">
+      <div className="mt-4 grid grid-cols-4 gap-4 lg:mt-2">
         {Object.keys(units).map((i) => (
           <PrimaryButton
             key={i}

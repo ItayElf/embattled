@@ -81,7 +81,7 @@ const JoinModal: React.FC<Props> = ({ room, onClose, armies }) => {
       </div>
       <form onSubmit={join}>
         <select
-          className="w-full rounded border-none h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3 mt-10"
+          className="h5 mt-10 w-full rounded border-none bg-primary-50 py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
           value={selectedArmyName}
           onChange={(e) => setSelectedArmyName(e.target.value)}
           required
@@ -95,7 +95,7 @@ const JoinModal: React.FC<Props> = ({ room, onClose, armies }) => {
             </option>
           ))}
         </select>
-        <PrimaryButton className="w-full mt-6">Join</PrimaryButton>
+        <PrimaryButton className="mt-6 w-full">Join</PrimaryButton>
       </form>
     </Modal>
   );

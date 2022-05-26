@@ -19,12 +19,12 @@ const LogArea: React.FC<Props> = ({ messages, className }) => {
 
   return (
     <div
-      className={`bg-secondary-dark border-l-[16px] flex flex-col border-primary-600 ${className}`}
+      className={`flex flex-col border-l-[16px] border-primary-600 bg-secondary-dark ${className}`}
     >
-      <div className="bg-primary-600 shadow-sm s1 lg:h5 pl-9 py-1 text-white">
+      <div className="s1 lg:h5 bg-primary-600 py-1 pl-9 text-white shadow-sm">
         Logs
       </div>
-      <div className="flex-1 pl-4 space-y-3 overflow-auto pr-2 scrollbar scrollbar-thumb-primary-900 scrollbar-track-primary-100">
+      <div className="flex-1 space-y-3 overflow-auto pl-4 pr-2 scrollbar scrollbar-track-primary-100 scrollbar-thumb-primary-900">
         <div />
         {almostAllMessages.map((m, i) => (
           <LogTile message={m} key={i} />
@@ -53,7 +53,7 @@ const LogTile: React.FC<LogProps> = ({ message }) => {
     );
   } else if (message.type === "turn") {
     return (
-      <div className="s1 bg-primary-600 pl-9 -ml-4 text-white mb-2 py-2 lg:py-4">
+      <div className="s1 -ml-4 mb-2 bg-primary-600 py-2 pl-9 text-white lg:py-4">
         Turn {message.turn}
       </div>
     );

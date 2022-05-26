@@ -79,14 +79,14 @@ export default function ArmybuilderHome() {
   return (
     <>
       <Header user={user} />
-      <div className="flex flex-col mt-24 px-24 justify-center items-center">
+      <div className="mt-24 flex flex-col items-center justify-center px-24">
         <h1 className="h4 lg:h2">All Armies</h1>
-        <PrimaryButton className="w-72 h6 lg:h4" onClick={onNewArmy}>
+        <PrimaryButton className="h6 lg:h4 w-72" onClick={onNewArmy}>
           + New Army
         </PrimaryButton>
-        <table className="w-full mt-4">
+        <table className="mt-4 w-full">
           <thead>
-            <tr className="bg-primary-600 s1 lg:h6 text-white">
+            <tr className="s1 lg:h6 bg-primary-600 text-white">
               <td className="py-2 pl-6">Name</td>
               <td className="py-2">Mode</td>
               <td className="py-2">Worth</td>
@@ -108,7 +108,7 @@ export default function ArmybuilderHome() {
                 </td>
                 <td className="py-2">{getPoints(a)} Points</td>
                 <td className="py-2">{getFaction(a.units)}</td>
-                <td className="py-2 flex space-x-2 max-w-[280px] lg:max-w-[230px]">
+                <td className="flex max-w-[280px] space-x-2 py-2 lg:max-w-[230px]">
                   <PrimaryButton
                     onClick={() => validate(a)}
                     className="caption lg:s2"

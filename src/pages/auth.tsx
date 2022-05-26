@@ -50,9 +50,9 @@ export default function Auth({ signIn }: Props) {
   );
 
   return (
-    <div className="bg-primary-50 w-full h-screen flex items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center bg-primary-50">
       <form
-        className="bg-white shadow-md shadow-primary-200 flex flex-col p-6 justify-center space-y-9"
+        className="flex flex-col justify-center space-y-9 bg-white p-6 shadow-md shadow-primary-200"
         onSubmit={onSubmit}
       >
         <div className="flex items-center space-x-4">

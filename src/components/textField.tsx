@@ -37,7 +37,7 @@ const TextField: React.FC<Props> = ({
       />
       <label
         htmlFor={id ?? label}
-        className={`s1 peer-placeholder-shown:h5 peer-placeholder-shown:font-[ptsans] font-[ptsans] absolute -top-3.5 left-3 text-black peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray ${labelClassName}`}
+        className={`s1 peer-placeholder-shown:h5 absolute -top-3.5 left-3 font-[ptsans] text-black peer-placeholder-shown:top-2.5 peer-placeholder-shown:font-[ptsans] peer-placeholder-shown:text-gray ${labelClassName}`}
       >
         {label}
       </label>

@@ -54,8 +54,8 @@ export default function ArmyPreview() {
   return (
     <>
       <Header user={user} />
-      <div className="flex px-6 space-x-2">
-        <div className="mt-24 flex flex-col items-center w-full">
+      <div className="flex space-x-2 px-6">
+        <div className="mt-24 flex w-full flex-col items-center">
           <TextField
             type="text"
             value={selectedName}
@@ -64,9 +64,9 @@ export default function ArmyPreview() {
             className="text-[32px] lg:text-[64px]"
             wrapperClassName="mb-4 w-full"
           />
-          <div className="flex space-x-4 w-full">
+          <div className="flex w-full space-x-4">
             <select
-              className="w-1/2 rounded border-none s1 lg:h5 bg-primary-50 focus:border-0 focus:ring-0 focus:ring-offset-0 font-ptsans py-3"
+              className="s1 lg:h5 w-1/2 rounded border-none bg-primary-50 py-3 font-ptsans focus:border-0 focus:ring-0 focus:ring-offset-0"
               value={selectedMode}
               onChange={(e) => setSelectedMode(e.target.value)}
               required
@@ -97,7 +97,7 @@ export default function ArmyPreview() {
               Save Changes
             </PrimaryButton>
             <Link to={`/armyunits/${army.name}`} className="w-1/4">
-              <PrimaryButton className="s2 lg:h6 w-full h-full">
+              <PrimaryButton className="s2 lg:h6 h-full w-full">
                 Edit Units
               </PrimaryButton>
             </Link>
@@ -105,7 +105,7 @@ export default function ArmyPreview() {
           <h4 className="h6 lg:h4 mt-8">Units</h4>
           <table className="w-full">
             <thead>
-              <tr className="bg-primary-600 s2 lg:h6 text-white">
+              <tr className="s2 lg:h6 bg-primary-600 text-white">
                 <td className="py-2 pl-6">Name</td>
                 <td className="py-2">Position</td>
                 <td className="py-2">Faction</td>

@@ -9,9 +9,9 @@ interface Props {
 
 const Header: React.FC<Props> = ({ user }) => {
   return (
-    <header className="fixed top-0 z-10 flex h-16 w-full justify-between bg-primary-600 shadow-sm px-16 items-center">
-      <div className="flex space-x-12 items-center">
-        <div className="flex space-x-2 items-center">
+    <header className="fixed top-0 z-10 flex h-16 w-full items-center justify-between bg-primary-600 px-16 shadow-sm">
+      <div className="flex items-center space-x-12">
+        <div className="flex items-center space-x-2">
           <Logo className="h-14" />
           <h4 className="h4 text-white">Embattled</h4>
         </div>
@@ -26,7 +26,7 @@ const Header: React.FC<Props> = ({ user }) => {
         <div className="flex items-center space-x-3">
           <h5 className="h5 text-white">{user.name}</h5>
           <img
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full"
             src={BASE_API + `auth/profile/${user.name}`}
             alt=""
           />
@@ -38,7 +38,7 @@ const Header: React.FC<Props> = ({ user }) => {
           </Link>
           <Link
             to={"/signUp"}
-            className="h6 bg-primary-50 rounded p-2 text-primary-900"
+            className="h6 rounded bg-primary-50 p-2 text-primary-900"
           >
             Sign Up
           </Link>

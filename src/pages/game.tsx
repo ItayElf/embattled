@@ -112,7 +112,7 @@ export default function GamePage() {
     return (
       <>
         <Header user={user} />
-        <div className="h-screen flex justify-center items-center flex-col space-y-8">
+        <div className="flex h-screen flex-col items-center justify-center space-y-8">
           <h1 className="h2">Waiting for an opponent...</h1>
           <Loading />
         </div>
@@ -123,7 +123,7 @@ export default function GamePage() {
   return (
     <>
       <Header user={user} />
-      <div className="flex px-6 mt-24 max-h-screen">
+      <div className="mt-24 flex max-h-screen px-6">
         <BattleCanvas
           game={game}
           moveSquares={moveSquares}
@@ -138,13 +138,13 @@ export default function GamePage() {
             <ActionPanel
               game={game}
               isHost={game.host.name === user.name}
-              className="w-full h-1/2"
+              className="h-1/2 w-full"
               onRequestMove={onRequestMove}
               onRequestAttack={onRequestAttack}
               onRequestHalt={onRequestHalt}
               resetMove={() => setMoveSquares(null)}
             />
-            <LogArea messages={msgs} className="w-full h-1/2" />
+            <LogArea messages={msgs} className="h-1/2 w-full" />
           </div>
         </div>
       </div>
