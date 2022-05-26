@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/header";
+import ImportExportModal from "../components/importExportModal";
 import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import { BASE_API } from "../constants";
@@ -25,6 +26,7 @@ export default function ArmybuilderHome() {
   const [armies, setArmies] = useState(
     JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[]
   );
+  const [exportedArmy, setExportedArmy] = useState<Army | undefined>();
   const user = useCurrentUser(true);
   const navigate = useNavigate();
 
@@ -106,7 +108,7 @@ export default function ArmybuilderHome() {
                 </td>
                 <td className="py-2">{getPoints(a)} Points</td>
                 <td className="py-2">{getFaction(a.units)}</td>
-                <td className="py-2 flex space-x-2 max-w-[160px]">
+                <td className="py-2 flex space-x-2 max-w-[230px]">
                   <PrimaryButton onClick={() => validate(a)} className="s2">
                     Validate
                   </PrimaryButton>
@@ -119,12 +121,22 @@ export default function ArmybuilderHome() {
                   >
                     Delete
                   </PrimaryButton>
+                  <PrimaryButton
+                    className="s2"
+                    onClick={() => setExportedArmy(a)}
+                  >
+                    Import/Export
+                  </PrimaryButton>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <ImportExportModal
+        army={exportedArmy}
+        onClose={() => setExportedArmy(undefined)}
+      />
     </>
   );
 }
