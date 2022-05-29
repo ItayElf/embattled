@@ -27,7 +27,7 @@ export default function ArmybuilderHome() {
     JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[]
   );
   const [exportedArmy, setExportedArmy] = useState<Army | undefined>();
-  const user = useCurrentUser(true);
+  const user = useCurrentUser(false);
   const navigate = useNavigate();
 
   const validate = useCallback(async (army: Army) => {
@@ -74,7 +74,7 @@ export default function ArmybuilderHome() {
     [armies]
   );
 
-  if (!user || !modes) return <Loading className="h-screen" />;
+  if (!modes) return <Loading className="h-screen" />;
 
   return (
     <>

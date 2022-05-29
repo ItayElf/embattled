@@ -15,7 +15,7 @@ import { getFetch } from "../utils/fetchUtils";
 import { getFaction } from "./armybuilderHome";
 
 export default function UnitEditor() {
-  const user = useCurrentUser(true);
+  const user = useCurrentUser(false);
   const { name } = useParams();
   const [unitsData, setUnitsData] = useState<UnitData[] | null>(null);
   const armies = JSON.parse(localStorage.getItem("armies") ?? "[]") as Army[];
@@ -103,7 +103,7 @@ export default function UnitEditor() {
     setSelectedUnit(units.length);
   }, [units.length, army.mode.board_size]);
 
-  if (!user || !unitsData) return <Loading className="h-screen" />;
+  if (!unitsData) return <Loading className="h-screen" />;
 
   return (
     <>

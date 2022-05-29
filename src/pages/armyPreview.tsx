@@ -23,7 +23,7 @@ export default function ArmyPreview() {
   const [modes, setModes] = useState<Mode[] | null>(null);
   const [selectedMode, setSelectedMode] = useState((army?.mode?.id ?? "") + "");
   const [selectedName, setSelectedName] = useState(army?.name ?? "");
-  const user = useCurrentUser(true);
+  const user = useCurrentUser(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function ArmyPreview() {
     return <Navigate to="/armybuilder" />;
   }
 
-  if (!user || !modes) return <Loading className="h-screen" />;
+  if (!modes) return <Loading className="h-screen" />;
 
   return (
     <>

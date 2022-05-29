@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import ArmybuilderHome from "./pages/armybuilderHome";
 import ArmyPreview from "./pages/armyPreview";
 import Auth from "./pages/auth";
+import DamageCalc from "./pages/damageCalc";
 import GamePage from "./pages/game";
 import Rooms from "./pages/rooms";
 import UnitEditor from "./pages/unitsEditor";
@@ -16,6 +17,7 @@ function App() {
       <Route path="/armybuilder" element={<ArmybuilderHome />} />
       <Route path="/army/:name" element={<ArmyPreview />} />
       <Route path="/armyunits/:name" element={<UnitEditor />} />
+      <Route path="/damageCalc" element={<DamageCalc />} />
     </Routes>
   );
 }
