@@ -181,7 +181,7 @@ interface Props {
 
 const UnitDataArea: React.FC<Props> = ({
   unit,
-  unitsData,
+  unitsData: ud,
   className,
   boardSize,
   onChangeUnit,
@@ -192,12 +192,66 @@ const UnitDataArea: React.FC<Props> = ({
   const [selectedName, setSelectedName] = useState(unit.name);
   const [selectedX, setSelectedX] = useState(unit.position[0] + "");
   const [selectedY, setSelectedY] = useState(unit.position[1] + "");
+  const [unitsData, setUnitsData] = useState([...ud]);
+  const [lastField, setLastField] = useState<string | undefined>();
 
   useEffect(() => {
     setSelectedName(unit.name);
     setSelectedX(unit.position[0] + "");
     setSelectedY(unit.position[1] + "");
   }, [unit]);
+
+  const onSort = useCallback(
+    (field: string) => {
+      if (field === "name") {
+        if (lastField === "name")
+          setUnitsData((u) => u.sort((a, b) => a.name.localeCompare(b.name)));
+        else
+          setUnitsData((u) => u.sort((a, b) => b.name.localeCompare(a.name)));
+        setLastField((f) => (field === f ? undefined : "name"));
+      } else if (field === "faction") {
+        if (lastField === "faction")
+          setUnitsData((u) =>
+            u.sort((a, b) =>
+              (a.faction ?? "Mercenaries").localeCompare(
+                b.faction ?? "Mercenaries"
+              )
+            )
+          );
+        else
+          setUnitsData((u) =>
+            u.sort((a, b) =>
+              (b.faction ?? "Mercenaries").localeCompare(
+                a.faction ?? "Mercenaries"
+              )
+            )
+          );
+        setLastField((f) => (field === f ? undefined : "faction"));
+      } else if (field === "class") {
+        if (lastField === "class")
+          setUnitsData((u) => u.sort((a, b) => a.clas.localeCompare(b.clas)));
+        else
+          setUnitsData((u) => u.sort((a, b) => b.clas.localeCompare(a.clas)));
+        setLastField((f) => (field === f ? undefined : "class"));
+      } else if (field === "cost") {
+        if (lastField === "cost")
+          setUnitsData((u) => u.sort((a, b) => a.cost - b.cost));
+        else setUnitsData((u) => u.sort((a, b) => b.cost - a.cost));
+        setLastField((f) => (field === f ? undefined : "cost"));
+      } else if (field === "ranged") {
+        if (lastField === "ranged")
+          setUnitsData((u) =>
+            u.sort((a, b) => (a.range ? (b.range ? 0 : 1) : b.range ? -1 : 0))
+          );
+        else
+          setUnitsData((u) =>
+            u.sort((a, b) => (b.range ? (a.range ? 0 : 1) : a.range ? -1 : 0))
+          );
+        setLastField((f) => (field === f ? undefined : "ranged"));
+      }
+    },
+    [lastField]
+  );
 
   const filteredData = unitsData.filter((u) => {
     let res = u.name.includes(selectedName);
@@ -282,11 +336,30 @@ const UnitDataArea: React.FC<Props> = ({
       <table className="w-full">
         <thead>
           <tr className="caption lg:s1 bg-primary-600 text-white">
-            <td className="py-2 pl-6">Name</td>
-            <td className="py-2">Faction</td>
-            <td className="py-2">Class</td>
-            <td className="py-2">Cost</td>
-            <td className="py-2">Ranged</td>
+            <td
+              className="cursor-pointer py-2 pl-6"
+              onClick={() => onSort("name")}
+            >
+              Name
+            </td>
+            <td
+              className="cursor-pointer py-2"
+              onClick={() => onSort("faction")}
+            >
+              Faction
+            </td>
+            <td className="cursor-pointer py-2" onClick={() => onSort("class")}>
+              Class
+            </td>
+            <td className="cursor-pointer py-2" onClick={() => onSort("cost")}>
+              Cost
+            </td>
+            <td
+              className="cursor-pointer py-2"
+              onClick={() => onSort("ranged")}
+            >
+              Ranged
+            </td>
             <td className="py-2">More</td>
           </tr>
         </thead>
