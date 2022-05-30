@@ -7,6 +7,7 @@ import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import Army from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import Room from "../interfaces/room";
@@ -23,6 +24,8 @@ export default function Rooms() {
   const [joinRoom, setJoinRoom] = useState<Room | null>(null);
   const navigate = useNavigate();
   const user = useCurrentUser(true);
+
+  useTitle("Rooms");
 
   const refresh = useCallback(async () => {
     try {

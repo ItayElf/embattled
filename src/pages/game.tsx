@@ -13,6 +13,7 @@ import LogArea from "../components/logArea";
 import { BASE_WS } from "../constants";
 import globals from "../globals";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import AttackDestinations from "../interfaces/attackDestinations";
 import Game from "../interfaces/game";
 import LogMessage from "../interfaces/logMessage";
@@ -37,6 +38,8 @@ export default function GamePage() {
   const location = useLocation();
   const state = location.state as LocationState;
   const army = state.army;
+
+  useTitle(game ? `${game.host.name} VS ${game.joiner.name}` : "Game");
 
   const onRequestGenerator = useCallback(
     (type: string) => {
@@ -95,7 +98,9 @@ export default function GamePage() {
             ws.close();
           }
         } else if (res.type === "move") {
-          setMoveSquares(JSON.parse(res.content));
+          const obj = JSON.parse(res.content);
+          setMoveSquares(obj.squares);
+          setIndex(obj.id);
         } else if (res.type === "attack") {
           setAttackSquares(JSON.parse(res.content));
         } else if (res.type === "msg") {

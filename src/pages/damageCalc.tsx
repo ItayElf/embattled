@@ -4,6 +4,7 @@ import Loading from "../components/loading";
 import TextField from "../components/textField";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import DamageCalcRes from "../interfaces/damageCalcRes";
 import UnitData from "../interfaces/unitData";
 import { getFetch } from "../utils/fetchUtils";
@@ -20,6 +21,8 @@ export default function DamageCalc() {
   const [flank, setFlank] = useState(false);
   const [charge, setCharge] = useState(false);
   const [advantage, setAdvantage] = useState(0);
+
+  useTitle("Damage Calculator");
 
   const calcDamage = useCallback(async () => {
     if (!attacker || !defender) return;

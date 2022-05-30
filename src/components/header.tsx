@@ -16,7 +16,7 @@ const Header: React.FC<Props> = ({ user }) => {
           <h4 className="h4 text-white">Embattled</h4>
         </div>
         <Link to={"/rooms"} className="h6 text-white">
-          Home
+          Rooms
         </Link>
         <Link to={"/armybuilder"} className="h6 text-white">
           Armybuilder

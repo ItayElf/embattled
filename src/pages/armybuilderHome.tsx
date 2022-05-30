@@ -6,6 +6,7 @@ import Loading from "../components/loading";
 import PrimaryButton from "../components/primaryButton";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import Army, { ArmyUnit } from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import { getFetch, postFetch } from "../utils/fetchUtils";
@@ -29,6 +30,8 @@ export default function ArmybuilderHome() {
   const [exportedArmy, setExportedArmy] = useState<Army | undefined>();
   const user = useCurrentUser(false);
   const navigate = useNavigate();
+
+  useTitle("Armybuilder");
 
   const validate = useCallback(async (army: Army) => {
     const res = await postFetch(BASE_API + "rooms/validate_army", {

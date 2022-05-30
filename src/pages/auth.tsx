@@ -5,6 +5,7 @@ import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
 import { BASE_API } from "../constants";
 import globals from "../globals";
+import useTitle from "../hooks/useTitle";
 import { postFetch } from "../utils/fetchUtils";
 
 interface Props {
@@ -17,6 +18,8 @@ export default function Auth({ signIn }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useTitle(signIn ? "Sign In" : "Sign Up");
 
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {

@@ -8,6 +8,7 @@ import PrimaryButton from "../components/primaryButton";
 import TextField from "../components/textField";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import Army from "../interfaces/army";
 import Mode from "../interfaces/mode";
 import { getFetch } from "../utils/fetchUtils";
@@ -25,6 +26,8 @@ export default function ArmyPreview() {
   const [selectedName, setSelectedName] = useState(army?.name ?? "");
   const user = useCurrentUser(false);
   const navigate = useNavigate();
+
+  useTitle(army.name);
 
   useEffect(() => {
     getFetch(BASE_API + "modes")

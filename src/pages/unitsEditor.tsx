@@ -9,6 +9,7 @@ import TextField from "../components/textField";
 import UnitDataViewer from "../components/unitDataViewer";
 import { BASE_API } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import Army, { ArmyUnit } from "../interfaces/army";
 import UnitData from "../interfaces/unitData";
 import { getFetch } from "../utils/fetchUtils";
@@ -39,6 +40,8 @@ export default function UnitEditor() {
     null
   );
   const navigate = useNavigate();
+
+  useTitle(`${army.name} - units`);
 
   const filteredUnits = units.filter((u) => u.name !== "" && u.cost !== 0);
 
@@ -86,7 +89,7 @@ export default function UnitEditor() {
         clas: "",
       });
     setUnits(us);
-    setSelectedUnit((v) => (us.length === 1 ? 0 : v - 1));
+    setSelectedUnit((v) => (us.length === 1 ? 0 : Math.max(v - 1, 0)));
   }, [selectedUnit, units, army.mode.board_size]);
 
   const onAdd = useCallback(() => {

@@ -246,7 +246,6 @@ const BattleCanvas: React.FC<Props> = ({
 
     if (game.last_move !== null) {
       game.last_move.forEach((pos) => {
-        console.log(pos);
         if (isVisible(pos)) {
           drawSquare(ctx, pos[0], pos[1], "rgba(255, 255, 255, 0.4)");
         }
