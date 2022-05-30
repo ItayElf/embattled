@@ -24,7 +24,7 @@ const customStyles = {
 
 const armyToExport = (army?: Army) =>
   army
-    ? `${army.name}\n${army.mode.name}|${army.mode.points}\n\n` +
+    ? `${army.name}\n${army.mode.name}|${army.mode.points}|${army.mode.board_size}\n\n` +
       army.units
         .map(
           (u) =>

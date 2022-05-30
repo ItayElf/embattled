@@ -79,7 +79,7 @@ export default function ArmyPreview() {
               </option>
               {modes.map((m, i) => (
                 <option value={m.id + ""} key={i}>
-                  {m.name} ({m.points}P)
+                  {m.name} ({m.points}P, {m.board_size})
                 </option>
               ))}
             </select>

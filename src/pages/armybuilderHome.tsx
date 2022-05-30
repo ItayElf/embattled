@@ -42,7 +42,9 @@ export default function ArmybuilderHome() {
       alert("Invalid army:\n" + JSON.parse(await res.text()).join("\n"));
       return;
     } else {
-      alert(`This army is valid for ${army.mode.name} (${army.mode.points}P)!`);
+      alert(
+        `This army is valid for ${army.mode.name} (${army.mode.points}P, ${army.mode.board_size})!`
+      );
     }
   }, []);
 
@@ -107,7 +109,7 @@ export default function ArmybuilderHome() {
               >
                 <td className="py-2 pl-6">{a.name}</td>
                 <td className="py-2">
-                  {a.mode.name} ({a.mode.points}P)
+                  {a.mode.name} ({a.mode.points}P, {a.mode.board_size})
                 </td>
                 <td className="py-2">{getPoints(a)} Points</td>
                 <td className="py-2">{getFaction(a.units)}</td>

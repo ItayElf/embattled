@@ -114,7 +114,7 @@ export default function Rooms() {
                   }`}
                 >
                   <td className="py-2 pl-6">{r.name}</td>
-                  <td className="py-2">{`${r.mode.name} (${r.mode.points}P)`}</td>
+                  <td className="py-2">{`${r.mode.name} (${r.mode.points}P, ${r.mode.board_size})`}</td>
                   <td className="py-2">
                     {r.host.name} ({r.host.rating})
                   </td>
@@ -159,7 +159,7 @@ export default function Rooms() {
               </option>
               {modes.map((m, i) => (
                 <option value={m.id + ""} key={i}>
-                  {m.name} ({m.points}P)
+                  {m.name} ({m.points}P, {m.board_size})
                 </option>
               ))}
             </select>
