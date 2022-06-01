@@ -79,7 +79,26 @@ export default function DamageCalc() {
     <>
       <Header user={user} />
       <div className="mt-24 px-6">
-        <h3 className="h3 text-center">Damage Calculator</h3>
+        <div className="mx-auto flex w-max">
+          <h3 className="h3">Damage Calculator</h3>
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="rgb(240 49 52)"
+            className="h-24 w-24 cursor-pointer"
+            onClick={() => {
+              setAttacker(defender);
+              setDefender(attacker);
+              setRanged(false);
+              setFlank(false);
+              setCharge(false);
+              setAdvantage(0);
+            }}
+          >
+            <path fill="none" d="M0 0h24v24H0z"></path>
+            <path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path>
+          </svg>
+        </div>
         <div className="flex space-x-4">
           <div className="w-full">
             <h4 className="h4 text-center">Attacker</h4>
